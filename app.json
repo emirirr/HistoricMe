@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "HistoricMe",
+    "slug": "historicme",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#386160"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.historicme.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#386160"
+      },
+      "package": "com.historicme.app"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-image-picker"
+    ]
+  }
+}
