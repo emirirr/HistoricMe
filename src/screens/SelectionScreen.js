@@ -6,7 +6,7 @@ import { Button, Card } from '../components/ui';
 import { theme } from '../styles/theme';
 
 const { width } = Dimensions.get('window');
-const cardWidth = (width - 60) / 2;
+const cardWidth = (width - 80) / 2;
 
 const historicalFigures = {
   leaders: [
@@ -15,7 +15,7 @@ const historicalFigures = {
       name: 'Napolyon Bonaparte',
       title: 'Fransız İmparatoru',
       era: '1769-1821',
-      image: '👑',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg',
       description: 'Fransa İmparatoru ve büyük askeri deha',
       popularity: 95,
     },
@@ -24,28 +24,28 @@ const historicalFigures = {
       name: 'George Washington',
       title: 'ABD\'nin İlk Başkanı',
       era: '1732-1799',
-      image: '🇺🇸',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg',
       description: 'Amerika Birleşik Devletleri\'nin kurucusu',
       popularity: 92,
     },
-    {
-      id: 'caesar',
-      name: 'Julius Caesar',
-      title: 'Roma İmparatoru',
-      era: 'MÖ 100-44',
-      image: '🏛️',
-      description: 'Roma Cumhuriyeti\'nin son diktatörü',
-      popularity: 98,
-    },
-    {
-      id: 'alexander',
-      name: 'Büyük İskender',
-      title: 'Makedon Kralı',
-      era: 'MÖ 356-323',
-      image: '⚔️',
-      description: 'Dünyayı fetheden genç komutan',
-      popularity: 96,
-    },
+     {
+       id: 'caesar',
+       name: 'Julius Caesar',
+       title: 'Roma İmparatoru',
+       era: 'MÖ 100-44',
+       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=face',
+       description: 'Roma Cumhuriyeti\'nin son diktatörü',
+       popularity: 98,
+     },
+     {
+       id: 'alexander',
+       name: 'Büyük İskender',
+       title: 'Makedon Kralı',
+       era: 'MÖ 356-323',
+       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=face',
+       description: 'Dünyayı fetheden genç komutan',
+       popularity: 96,
+     },
   ],
   scientists: [
     {
@@ -53,7 +53,7 @@ const historicalFigures = {
       name: 'Albert Einstein',
       title: 'Fizikçi',
       era: '1879-1955',
-      image: '🧠',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg',
       description: 'Görelilik teorisinin yaratıcısı',
       popularity: 99,
     },
@@ -62,7 +62,7 @@ const historicalFigures = {
       name: 'Marie Curie',
       title: 'Fizikçi & Kimyager',
       era: '1867-1934',
-      image: '🔬',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Marie_Curie_c1920.jpg',
       description: 'Nobel ödülü kazanan ilk kadın',
       popularity: 94,
     },
@@ -71,7 +71,7 @@ const historicalFigures = {
       name: 'Isaac Newton',
       title: 'Matematikçi & Fizikçi',
       era: '1643-1727',
-      image: '🍎',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Portrait_of_Sir_Isaac_Newton%2C_1689.jpg',
       description: 'Yerçekimi yasasını keşfeden bilim insanı',
       popularity: 97,
     },
@@ -80,7 +80,7 @@ const historicalFigures = {
       name: 'Charles Darwin',
       title: 'Doğa Bilimci',
       era: '1809-1882',
-      image: '🐒',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Charles_Darwin_seated_crop.jpg',
       description: 'Evrim teorisinin babası',
       popularity: 93,
     },
@@ -91,7 +91,7 @@ const historicalFigures = {
       name: 'Leonardo da Vinci',
       title: 'Rönesans Sanatçısı',
       era: '1452-1519',
-      image: '🎨',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Leonardo_self.jpg',
       description: 'Mona Lisa\'nın yaratıcısı',
       popularity: 100,
     },
@@ -100,29 +100,67 @@ const historicalFigures = {
       name: 'Vincent van Gogh',
       title: 'Post-Emprasyonist',
       era: '1853-1890',
-      image: '🌻',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/b/b2/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_%28454045%29.jpg',
       description: 'Yıldızlı Gece\'nin ressamı',
       popularity: 96,
     },
-    {
-      id: 'michelangelo',
-      name: 'Michelangelo',
-      title: 'Heykeltıraş & Ressam',
-      era: '1475-1564',
-      image: '⛪',
-      description: 'Sistine Şapeli\'nin yaratıcısı',
-      popularity: 98,
-    },
-    {
-      id: 'picasso',
-      name: 'Pablo Picasso',
-      title: 'Kübist Sanatçı',
-      era: '1881-1973',
-      image: '🎭',
-      description: 'Modern sanatın öncüsü',
-      popularity: 95,
-    },
+     {
+       id: 'michelangelo',
+       name: 'Michelangelo',
+       title: 'Heykeltıraş & Ressam',
+       era: '1475-1564',
+       image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Busto_del_Duomo_di_Firenze_-_Giuliano_da_Sangallo_-_Michelangelo.jpg/800px-Busto_del_Duomo_di_Firenze_-_Giuliano_da_Sangallo_-_Michelangelo.jpg',
+       description: 'Sistine Şapeli\'nin yaratıcısı',
+       popularity: 98,
+     },
+     {
+       id: 'picasso',
+       name: 'Pablo Picasso',
+       title: 'Kübist Sanatçı',
+       era: '1881-1973',
+       image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Pablo_picasso_1.jpg/800px-Pablo_picasso_1.jpg',
+       description: 'Modern sanatın öncüsü',
+       popularity: 95,
+     },
   ],
+   ottoman: [
+     {
+       id: 'mehmed_fatih',
+       name: 'Fatih Sultan Mehmed',
+       title: 'Osmanlı Padişahı',
+       era: '1432-1481',
+       image: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQZIwsfKNUKw1DbQc8JZZ7wfGbe-a0nNWABHZ-lzaLRQxLo6LMQtDH6VhZSdoj6qrE1ofB7nc5XjYazi75gQcOC3Sl9VC-q1fbqSe5ttojk',
+       description: 'İstanbul\'u fetheden büyük padişah',
+       popularity: 100,
+     },
+     {
+       id: 'suleiman',
+       name: 'Kanuni Sultan Süleyman',
+       title: 'Osmanlı Padişahı',
+       era: '1494-1566',
+       image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSYfBLEoJKxk_vHYABiw9Dp_tBorjjBXxpUJm3oJuxBCGIPTLiGCxOrBxBOEeJQmjLHCp6CVj3BSs5jgQ5uXtf64grWK7Y5_-YhH2tEaNdgRg',
+       description: 'Osmanlı\'nın en güçlü padişahı',
+       popularity: 99,
+     },
+     {
+       id: 'selim_yavuz',
+       name: 'Yavuz Sultan Selim',
+       title: 'Osmanlı Padişahı',
+       era: '1470-1520',
+       image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Yavuz_Sultan_Selim_Han_%28cropped%29.jpg/250px-Yavuz_Sultan_Selim_Han_%28cropped%29.jpg',
+       description: 'Halifeliği Osmanlı\'ya getiren padişah',
+       popularity: 97,
+     },
+     {
+       id: 'abdulhamid',
+       name: 'II. Abdülhamid',
+       title: 'Osmanlı Padişahı',
+       era: '1842-1918',
+       image: 'https://turkmaarifansiklopedisi.org.tr/uploads/matter/original/abdulhamid-ii-1676e6972ae64f.webp',
+       description: 'Son büyük Osmanlı padişahı',
+       popularity: 95,
+     },
+   ],
 };
 
 const SelectionScreen = ({ onFigureSelected }) => {
@@ -133,6 +171,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
     { id: 'leaders', name: 'Liderler', icon: 'diamond', color: theme.colors.burgundy },
     { id: 'scientists', name: 'Bilim İnsanları', icon: 'flask', color: theme.colors.teal },
     { id: 'artists', name: 'Sanatçılar', icon: 'brush', color: theme.colors.burgundy },
+    { id: 'ottoman', name: 'Osmanlı Padişahları', icon: 'crown', color: theme.colors.gold },
   ];
 
   const handleCategorySelect = (categoryId) => {
@@ -145,7 +184,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
   };
 
   const handleContinue = () => {
-    if (selectedFigure) {
+    if (selectedFigure && selectedFigure.name) {
       onFigureSelected(selectedFigure);
     }
   };
@@ -174,12 +213,25 @@ const SelectionScreen = ({ onFigureSelected }) => {
             ...theme.shadows.sm,
           }}
         >
-          <Ionicons
-            name={category.icon}
-            size={20}
-            color={selectedCategory === category.id ? theme.colors.white : category.color}
-            style={{ marginRight: theme.spacing.sm }}
-          />
+           {category.id === 'ottoman' ? (
+             <Image
+               source={require('../../assets/Osmanli_armasi.svg.png')}
+               style={{
+                 width: 20,
+                 height: 20,
+                 marginRight: theme.spacing.sm,
+                 resizeMode: 'contain',
+               }}
+              
+             />
+           ) : (
+             <Ionicons
+               name={category.icon}
+               size={20}
+               color={selectedCategory === category.id ? theme.colors.white : category.color}
+               style={{ marginRight: theme.spacing.sm }}
+             />
+           )}
           <Text
             style={{
               fontFamily: theme.typography.fontFamily.sans,
@@ -202,38 +254,74 @@ const SelectionScreen = ({ onFigureSelected }) => {
       style={{
         width: cardWidth,
         marginBottom: theme.spacing.md,
-        marginHorizontal: 5,
+        marginHorizontal: theme.spacing.xs,
       }}
     >
       <Card
         variant={selectedFigure?.id === figure.id ? 'navy' : 'default'}
         style={{
-          height: 280,
+          height: 320,
           borderWidth: selectedFigure?.id === figure.id ? 3 : 1,
           borderColor: selectedFigure?.id === figure.id ? theme.colors.gold : theme.colors.gray200,
           ...theme.shadows.md,
         }}
       >
         <View style={{ alignItems: 'center', flex: 1 }}>
-          {/* Emoji */}
-          <Text
+          {/* Historical Figure Image */}
+          <View
             style={{
-              fontSize: 60,
+              width: 120,
+              height: 120,
+              borderRadius: 60,
+              overflow: 'hidden',
               marginBottom: theme.spacing.md,
+              borderWidth: 3,
+              borderColor: selectedFigure?.id === figure.id ? theme.colors.gold : theme.colors.gray200,
+              ...theme.shadows.sm,
             }}
           >
-            {figure.image}
-          </Text>
+            {figure.image ? (
+              <Image
+                source={{ uri: figure.image }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  resizeMode: 'cover',
+                }}
+                onError={() => console.log('Image failed to load:', figure.name)}
+                defaultSource={require('../../assets/ico.png')}
+              />
+            ) : (
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: selectedFigure?.id === figure.id ? theme.colors.gold : theme.colors.gray200,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Ionicons
+                  name="person"
+                  size={40}
+                  color={selectedFigure?.id === figure.id ? theme.colors.white : theme.colors.gray500}
+                />
+              </View>
+            )}
+          </View>
 
           {/* Name */}
           <Text
             style={{
               fontFamily: theme.typography.fontFamily.serif,
-              fontSize: theme.typography.fontSize.base,
+              fontSize: theme.typography.fontSize.lg,
               fontWeight: theme.typography.fontWeight.bold,
               color: selectedFigure?.id === figure.id ? theme.colors.white : theme.colors.navy,
               textAlign: 'center',
               marginBottom: theme.spacing.xs,
+              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
+              textShadowOffset: { width: 0, height: 1 },
+              textShadowRadius: 2,
             }}
           >
             {figure.name}
@@ -243,7 +331,8 @@ const SelectionScreen = ({ onFigureSelected }) => {
           <Text
             style={{
               fontFamily: theme.typography.fontFamily.sans,
-              fontSize: theme.typography.fontSize.sm,
+              fontSize: theme.typography.fontSize.base,
+              fontWeight: theme.typography.fontWeight.semibold,
               color: selectedFigure?.id === figure.id ? theme.colors.cream : theme.colors.gray600,
               textAlign: 'center',
               marginBottom: theme.spacing.xs,
@@ -314,22 +403,49 @@ const SelectionScreen = ({ onFigureSelected }) => {
         colors={[theme.colors.teal, theme.colors.tealLight]}
         style={{
           paddingTop: 60,
-          paddingBottom: 20,
+          paddingBottom: 40,
           paddingHorizontal: theme.spacing.xl,
+          borderBottomLeftRadius: theme.borderRadius['2xl'],
+          borderBottomRightRadius: theme.borderRadius['2xl'],
         }}
       >
-        <Text
-          style={{
-            fontFamily: theme.typography.fontFamily.serif,
-            fontSize: theme.typography.fontSize['2xl'],
-            fontWeight: theme.typography.fontWeight.bold,
-            color: theme.colors.white,
-            textAlign: 'center',
-            marginBottom: theme.spacing.sm,
-          }}
-        >
-          Tarih Figürü Seç
-        </Text>
+        {/* Header with Logo */}
+        <View style={{ alignItems: 'center', marginBottom: theme.spacing.lg }}>
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              backgroundColor: theme.colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: theme.spacing.md,
+              ...theme.shadows.md,
+            }}
+          >
+            <Image
+              source={require('../../assets/ico.png')}
+              style={{
+                width: 45,
+                height: 45,
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
+          
+          <Text
+            style={{
+              fontFamily: theme.typography.fontFamily.serif,
+              fontSize: theme.typography.fontSize['2xl'],
+              fontWeight: theme.typography.fontWeight.bold,
+              color: theme.colors.white,
+              textAlign: 'center',
+              marginBottom: theme.spacing.sm,
+            }}
+          >
+            Tarih Figürü Seç
+          </Text>
+        </View>
         <Text
           style={{
             fontFamily: theme.typography.fontFamily.sans,
@@ -357,7 +473,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            paddingHorizontal: theme.spacing.sm,
+            paddingHorizontal: theme.spacing.md,
           }}
         >
           {historicalFigures[selectedCategory]?.map(renderFigureCard)}
@@ -391,7 +507,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
                 marginBottom: theme.spacing.sm,
               }}
             >
-              {selectedFigure.name}
+              {selectedFigure?.name || 'Bilinmeyen Figür'}
             </Text>
             <Text
               style={{
@@ -402,7 +518,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
                 opacity: 0.8,
               }}
             >
-              {selectedFigure.title} • {selectedFigure.era}
+              {selectedFigure?.title || 'Bilinmeyen'} • {selectedFigure?.era || 'Bilinmeyen'}
             </Text>
           </Card>
         )}
@@ -413,24 +529,30 @@ const SelectionScreen = ({ onFigureSelected }) => {
         <View
           style={{
             padding: theme.spacing.lg,
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.cream,
             borderTopWidth: 1,
             borderTopColor: theme.colors.gray200,
+            ...theme.shadows.lg,
           }}
         >
           <Button
-            title="Devam Et"
-            variant="primary"
+            title={`${selectedFigure?.name || 'Seçilen Figür'} ile Devam Et`}
+            variant="secondary"
             size="lg"
             onPress={handleContinue}
             icon={
               <Ionicons
                 name="arrow-forward"
                 size={24}
-                color={theme.colors.white}
+                color={theme.colors.cream}
               />
             }
             iconPosition="right"
+            style={{
+              ...theme.shadows.md,
+              borderWidth: 2,
+              borderColor: theme.colors.teal,
+            }}
           />
         </View>
       )}

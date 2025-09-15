@@ -117,32 +117,23 @@ const UploadScreen = ({ onPhotoSelected }) => {
             width: 100,
             height: 100,
             borderRadius: 50,
-            backgroundColor: theme.colors.burgundy,
+            backgroundColor: theme.colors.white,
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: theme.spacing.xl,
             ...theme.shadows.lg,
           }}
         >
-          <Ionicons
-            name="camera"
-            size={50}
-            color={theme.colors.white}
+          <Image
+            source={require('../../assets/ico.png')}
+            style={{
+              width: 75,
+              height: 75,
+              resizeMode: 'contain',
+            }}
           />
         </View>
         
-        <Text
-          style={{
-            fontFamily: theme.typography.fontFamily.serif,
-            fontSize: theme.typography.fontSize['3xl'],
-            fontWeight: theme.typography.fontWeight.bold,
-            color: theme.colors.navy,
-            textAlign: 'center',
-            marginBottom: theme.spacing.md,
-          }}
-        >
-          Fotoğrafını Yükle
-        </Text>
         
         <Text
           style={{
@@ -162,14 +153,14 @@ const UploadScreen = ({ onPhotoSelected }) => {
       <View style={{ width: '100%', paddingHorizontal: theme.spacing.xl }}>
         <Button
           title="Kameradan Çek"
-          variant="primary"
+          variant="secondary"
           size="lg"
           onPress={handleCameraPress}
           icon={
             <Ionicons
               name="camera"
               size={24}
-              color={theme.colors.white}
+              color={theme.colors.cream}
             />
           }
           iconPosition="left"
@@ -314,14 +305,14 @@ const UploadScreen = ({ onPhotoSelected }) => {
       <View style={{ width: '100%', paddingHorizontal: theme.spacing.xl }}>
         <Button
           title="Devam Et"
-          variant="primary"
+          variant="secondary"
           size="lg"
           onPress={handleContinue}
           icon={
             <Ionicons
               name="arrow-forward"
               size={24}
-              color={theme.colors.white}
+              color={theme.colors.cream}
             />
           }
           iconPosition="right"
@@ -364,8 +355,10 @@ const UploadScreen = ({ onPhotoSelected }) => {
         colors={[theme.colors.teal, theme.colors.tealLight]}
         style={{
           paddingTop: 60,
-          paddingBottom: 20,
+          paddingBottom: 40,
           paddingHorizontal: theme.spacing.xl,
+          borderBottomLeftRadius: theme.borderRadius['2xl'],
+          borderBottomRightRadius: theme.borderRadius['2xl'],
         }}
       >
         <Text

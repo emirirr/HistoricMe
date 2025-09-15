@@ -14,7 +14,7 @@ const onboardingData = [
     subtitle: 'Fotoğrafını yükle ve tarihin efsanevi liderleriyle, bilim insanlarıyla ve sanatçılarıyla yan yana görün',
     icon: 'camera',
     color: theme.colors.burgundy,
-    image: '👑',
+    image: null,
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const onboardingData = [
     subtitle: 'Gelişmiş AI teknolojisi sayesinde fotoğrafını farklı tarihsel dönemlerde ve stillerde yeniden yarat',
     icon: 'sparkles',
     color: theme.colors.gold,
-    image: '✨',
+    image: null,
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const onboardingData = [
     subtitle: 'Yaratımlarını arkadaşlarınla paylaş, sosyal medyada paylaş ve tarihi figürlerle olan benzersiz anlarını yaşa',
     icon: 'share-social',
     color: theme.colors.navy,
-    image: '📱',
+    image: null,
   },
 ];
 

@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
 import UploadScreen from '../screens/UploadScreen';
 import SelectionScreen from '../screens/SelectionScreen';
 import ResultScreen from '../screens/ResultScreen';
@@ -27,6 +29,22 @@ const AppNavigator = () => {
     setCurrentScreen('Upload');
   };
 
+  const handleSignUpSuccess = (method) => {
+    setCurrentScreen('UserProfile');
+  };
+
+  const handleProfileComplete = (profileData) => {
+    setCurrentScreen('Upload');
+  };
+
+  const handleGoToSignUp = () => {
+    setCurrentScreen('SignUp');
+  };
+
+  const handleBackToLogin = () => {
+    setCurrentScreen('Login');
+  };
+
   const handlePhotoSelected = (photo) => {
     setCurrentScreen('Selection');
   };
@@ -44,7 +62,11 @@ const AppNavigator = () => {
       case 'Onboarding':
         return <OnboardingScreen onComplete={handleOnboardingComplete} />;
       case 'Login':
-        return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+        return <LoginScreen onLoginSuccess={handleLoginSuccess} onGoToSignUp={handleGoToSignUp} />;
+      case 'SignUp':
+        return <SignUpScreen onSignUpSuccess={handleSignUpSuccess} onBackToLogin={handleBackToLogin} />;
+      case 'UserProfile':
+        return <UserProfileScreen onProfileComplete={handleProfileComplete} />;
       case 'Upload':
         return <UploadScreen onPhotoSelected={handlePhotoSelected} />;
       case 'Selection':

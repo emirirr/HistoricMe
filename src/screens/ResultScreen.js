@@ -87,7 +87,7 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `HistoricMe ile ${selectedFigure.name} ile yan yana görünüyorum! 🏛️✨`,
+        message: `HistoricMe ile ${selectedFigure.name} ile yan yana görünüyorum!`,
         url: userPhoto?.uri, // In real app, this would be the generated image
       });
     } catch (error) {

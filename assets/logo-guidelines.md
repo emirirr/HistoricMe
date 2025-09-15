@@ -17,7 +17,7 @@ assets/
 ## 🎨 Logo Önerileri
 
 ### Renk Paleti
-- **Ana Renk**: #386160 (Teal)
+- **Ana Renk**: # (Teal)
 - **Vurgu Rengi**: #75281F (Burgundy)  
 - **Arka Plan**: #F0D9B6 (Cream)
 

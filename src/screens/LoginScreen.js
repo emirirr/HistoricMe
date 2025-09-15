@@ -5,11 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Button, Input } from '../components/ui';
 import { theme } from '../styles/theme';
 
-const LoginScreen = ({ onLoginSuccess }) => {
+const LoginScreen = ({ onLoginSuccess, onGoToSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -227,24 +226,45 @@ const LoginScreen = ({ onLoginSuccess }) => {
             placeholder="Şifrenizi girin"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            rightIcon={
-              <Ionicons
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={theme.colors.gray500}
-              />
-            }
+            secureTextEntry={true}
           />
           
           <Button
             title="Giriş Yap"
-            variant="primary"
+            variant="secondary"
             size="lg"
             onPress={handleEmailLogin}
             loading={isLoading}
             style={{ marginTop: theme.spacing.md }}
           />
+        </View>
+
+        {/* Sign Up Link */}
+        <View style={{ alignItems: 'center', marginBottom: theme.spacing.lg }}>
+          <Text
+            style={{
+              fontFamily: theme.typography.fontFamily.sans,
+              fontSize: theme.typography.fontSize.sm,
+              color: theme.colors.gray600,
+              marginBottom: theme.spacing.sm,
+              textAlign: 'center',
+            }}
+          >
+            Hesabınız yok mu?{' '}
+          </Text>
+          <TouchableOpacity onPress={onGoToSignUp}>
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.sm,
+                fontWeight: theme.typography.fontWeight.medium,
+                color: theme.colors.teal,
+                textDecorationLine: 'underline',
+              }}
+            >
+              Kayıt Ol
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Guest Login */}

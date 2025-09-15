@@ -50,6 +50,9 @@ const Button = ({
       secondary: {
         backgroundColor: theme.colors.teal,
       },
+      blue: {
+        backgroundColor: theme.colors.info,
+      },
       outline: {
         backgroundColor: 'transparent',
         borderWidth: 2,
@@ -71,7 +74,7 @@ const Button = ({
   const getTextStyles = () => {
     const baseStyles = {
       fontFamily: theme.typography.fontFamily.sans,
-      fontWeight: theme.typography.fontWeight.semibold,
+      fontWeight: theme.typography.fontWeight.bold,
       textAlign: 'center',
     };
 
@@ -82,8 +85,14 @@ const Button = ({
     };
 
     const variantStyles = {
-      primary: { color: theme.colors.white },
+      primary: { 
+        color: theme.colors.white,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
+      },
       secondary: { color: theme.colors.cream },
+      blue: { color: theme.colors.white },
       outline: { color: theme.colors.burgundy },
       ghost: { color: theme.colors.teal },
     };
@@ -106,7 +115,12 @@ const Button = ({
     }
 
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        flex: 1,
+      }}>
         {icon && iconPosition === 'left' && (
           <View style={{ marginRight: theme.spacing.sm }}>
             {icon}
@@ -136,12 +150,29 @@ const Button = ({
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: theme.borderRadius.lg,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            },
             getButtonStyles(),
-            { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
             style,
           ]}
         >
-          {renderContent()}
+          <View style={{ 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            flex: 1,
+          }}>
+            {renderContent()}
+          </View>
         </LinearGradient>
       )}
       {variant !== 'primary' && renderContent()}
