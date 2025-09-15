@@ -313,11 +313,18 @@ const SelectionScreen = ({ onFigureSelected }) => {
           {/* Name */}
           <View
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              paddingHorizontal: theme.spacing.sm,
-              paddingVertical: theme.spacing.xs,
-              borderRadius: theme.borderRadius.sm,
-              marginBottom: theme.spacing.xs,
+              backgroundColor: '#FFFFFF',
+              paddingHorizontal: theme.spacing.md,
+              paddingVertical: theme.spacing.sm,
+              borderRadius: theme.borderRadius.md,
+              marginBottom: theme.spacing.sm,
+              borderWidth: 2,
+              borderColor: theme.colors.teal,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
             }}
           >
             <Text
@@ -325,7 +332,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
                 fontFamily: theme.typography.fontFamily.serif,
                 fontSize: theme.typography.fontSize.lg,
                 fontWeight: theme.typography.fontWeight.bold,
-                color: theme.colors.black,
+                color: '#000000',
                 textAlign: 'center',
               }}
             >
@@ -336,11 +343,18 @@ const SelectionScreen = ({ onFigureSelected }) => {
           {/* Title */}
           <View
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.8)',
-              paddingHorizontal: theme.spacing.sm,
-              paddingVertical: theme.spacing.xs / 2,
-              borderRadius: theme.borderRadius.sm,
-              marginBottom: theme.spacing.xs,
+              backgroundColor: '#FFFFFF',
+              paddingHorizontal: theme.spacing.md,
+              paddingVertical: theme.spacing.xs,
+              borderRadius: theme.borderRadius.md,
+              marginBottom: theme.spacing.sm,
+              borderWidth: 1,
+              borderColor: theme.colors.gray300,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.2,
+              shadowRadius: 2,
+              elevation: 3,
             }}
           >
             <Text
@@ -348,7 +362,7 @@ const SelectionScreen = ({ onFigureSelected }) => {
                 fontFamily: theme.typography.fontFamily.sans,
                 fontSize: theme.typography.fontSize.base,
                 fontWeight: theme.typography.fontWeight.semibold,
-                color: theme.colors.gray800,
+                color: '#333333',
                 textAlign: 'center',
               }}
             >
@@ -357,43 +371,53 @@ const SelectionScreen = ({ onFigureSelected }) => {
           </View>
 
           {/* Era */}
-          <Text
+          <View
             style={{
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: theme.typography.fontSize.xs,
-              color: selectedFigure?.id === figure.id ? theme.colors.creamLight : theme.colors.gray600,
-              textAlign: 'center',
+              backgroundColor: '#F8F9FA',
+              paddingHorizontal: theme.spacing.sm,
+              paddingVertical: theme.spacing.xs / 2,
+              borderRadius: theme.borderRadius.sm,
               marginBottom: theme.spacing.sm,
-              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-              textShadowOffset: { width: 0, height: 1 },
-              textShadowRadius: 2,
             }}
           >
-            {figure.era}
-          </Text>
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.xs,
+                color: '#666666',
+                textAlign: 'center',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+            >
+              {figure.era}
+            </Text>
+          </View>
 
           {/* Popularity */}
           <View
             style={{
+              backgroundColor: '#FFF3CD',
+              paddingHorizontal: theme.spacing.sm,
+              paddingVertical: theme.spacing.xs / 2,
+              borderRadius: theme.borderRadius.sm,
+              marginBottom: theme.spacing.sm,
               flexDirection: 'row',
               alignItems: 'center',
-              marginBottom: theme.spacing.sm,
+              justifyContent: 'center',
             }}
           >
             <Ionicons
               name="star"
-              size={12}
-              color={selectedFigure?.id === figure.id ? theme.colors.gold : theme.colors.gold}
+              size={14}
+              color="#856404"
             />
             <Text
               style={{
                 fontFamily: theme.typography.fontFamily.sans,
                 fontSize: theme.typography.fontSize.xs,
-                color: selectedFigure?.id === figure.id ? theme.colors.gold : theme.colors.gray600,
+                color: '#856404',
                 marginLeft: 4,
-                textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                textShadowOffset: { width: 0, height: 1 },
-                textShadowRadius: 2,
+                fontWeight: theme.typography.fontWeight.medium,
               }}
             >
               {figure.popularity}% Popüler
@@ -401,20 +425,27 @@ const SelectionScreen = ({ onFigureSelected }) => {
           </View>
 
           {/* Description */}
-          <Text
+          <View
             style={{
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: theme.typography.fontSize.xs,
-              color: selectedFigure?.id === figure.id ? theme.colors.cream : theme.colors.gray700,
-              textAlign: 'center',
-              lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.xs,
-              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-              textShadowOffset: { width: 0, height: 1 },
-              textShadowRadius: 2,
+              backgroundColor: '#E9ECEF',
+              paddingHorizontal: theme.spacing.sm,
+              paddingVertical: theme.spacing.xs,
+              borderRadius: theme.borderRadius.sm,
             }}
           >
-            {figure.description}
-          </Text>
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.xs,
+                color: '#495057',
+                textAlign: 'center',
+                lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.xs,
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+            >
+              {figure.description}
+            </Text>
+          </View>
         </View>
       </Card>
     </TouchableOpacity>
