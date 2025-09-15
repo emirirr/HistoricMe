@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useSignUp, useOAuth } from '@clerk/clerk-expo';
 import { Button, Input } from '../components/ui';
 import { theme } from '../styles/theme';
 
@@ -15,14 +16,28 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [emailVerificationSent, setEmailVerificationSent] = useState(false);
+  
+  const { signUp, setActive, isLoaded } = useSignUp();
+  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
+  const { startOAuthFlow: appleAuth } = useOAuth({ strategy: 'oauth_apple' });
 
   const handleGoogleSignUp = async () => {
+    if (!isLoaded) return;
+    
     setIsLoading(true);
     try {
-      // Google sign up logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onSignUpSuccess('google');
+      const { createdSessionId, signIn, signUp, setActive } = await googleAuth();
+      
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        onSignUpSuccess('google');
+      } else if (signIn || signUp) {
+        // OAuth flow devam ediyor, kullanıcıyı bilgilendir
+        Alert.alert('Bilgi', 'OAuth işlemi devam ediyor...');
+      }
     } catch (error) {
+      console.error('Google signup error:', error);
       Alert.alert('Hata', 'Google ile kayıt olurken bir hata oluştu.');
     } finally {
       setIsLoading(false);
@@ -30,12 +45,21 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
   };
 
   const handleAppleSignUp = async () => {
+    if (!isLoaded) return;
+    
     setIsLoading(true);
     try {
-      // Apple sign up logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onSignUpSuccess('apple');
+      const { createdSessionId, signIn, signUp, setActive } = await appleAuth();
+      
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        onSignUpSuccess('apple');
+      } else if (signIn || signUp) {
+        // OAuth flow devam ediyor, kullanıcıyı bilgilendir
+        Alert.alert('Bilgi', 'OAuth işlemi devam ediyor...');
+      }
     } catch (error) {
+      console.error('Apple signup error:', error);
       Alert.alert('Hata', 'Apple ile kayıt olurken bir hata oluştu.');
     } finally {
       setIsLoading(false);
@@ -43,8 +67,17 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
   };
 
   const handleEmailSignUp = async () => {
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    if (!isLoaded) return;
+    
+    if (!email || !password || !confirmPassword) {
       Alert.alert('Uyarı', 'Lütfen tüm alanları doldurun.');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Uyarı', 'Lütfen geçerli bir email adresi girin.');
       return;
     }
 
@@ -65,11 +98,44 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
 
     setIsLoading(true);
     try {
-      // Email sign up logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onSignUpSuccess('email');
+      console.log('Clerk signUp object:', signUp);
+      console.log('Attempting to create account with:', { email });
+      
+      const result = await signUp.create({
+        emailAddress: email,
+        password: password,
+      });
+      
+      console.log('SignUp result:', result);
+
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId });
+        onSignUpSuccess('email');
+      } else if (result.status === 'missing_requirements') {
+        // Email verification gerekli
+        setEmailVerificationSent(true);
+        Alert.alert(
+          'Email Doğrulama Gerekli',
+          'Kayıt işlemi için email adresinizi doğrulamanız gerekiyor. Email kutunuzu kontrol edin.',
+          [{ text: 'Tamam' }]
+        );
+      } else {
+        Alert.alert('Hata', `Kayıt durumu: ${result.status}`);
+      }
     } catch (error) {
-      Alert.alert('Hata', 'Kayıt olurken bir hata oluştu.');
+      console.error('Email signup error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      
+      // Clerk error mesajlarını daha detaylı göster
+      if (error.errors && error.errors.length > 0) {
+        const errorMessage = error.errors[0].message;
+        const errorCode = error.errors[0].code;
+        Alert.alert('Kayıt Hatası', `${errorMessage}\n\nHata Kodu: ${errorCode}`);
+      } else if (error.message) {
+        Alert.alert('Kayıt Hatası', error.message);
+      } else {
+        Alert.alert('Hata', 'Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -144,26 +210,19 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
 
       {/* Form */}
       <View style={{ padding: theme.spacing.xl, flex: 1 }}>
-        {/* Name Fields */}
-        <View style={{ flexDirection: 'row', marginBottom: theme.spacing.lg }}>
-          <View style={{ flex: 1, marginRight: theme.spacing.sm }}>
-            <Input
-              label="Ad"
-              value={firstName}
-              onChangeText={setFirstName}
-              placeholder="Adınız"
-              autoCapitalize="words"
-            />
-          </View>
-          <View style={{ flex: 1, marginLeft: theme.spacing.sm }}>
-            <Input
-              label="Soyad"
-              value={lastName}
-              onChangeText={setLastName}
-              placeholder="Soyadınız"
-              autoCapitalize="words"
-            />
-          </View>
+        {/* Name Fields - Moved to UserProfileScreen */}
+        <View style={{ marginBottom: theme.spacing.lg }}>
+          <Text
+            style={{
+              fontFamily: theme.typography.fontFamily.sans,
+              fontSize: theme.typography.fontSize.sm,
+              color: theme.colors.gray600,
+              textAlign: 'center',
+              marginBottom: theme.spacing.md,
+            }}
+          >
+            İsim ve soyisim bilgilerinizi kayıt sonrası profil sayfasında girebilirsiniz.
+          </Text>
         </View>
 
         {/* Email */}
@@ -175,7 +234,7 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
             placeholder="ornek@email.com"
             keyboardType="email-address"
             autoCapitalize="none"
-            leftIcon="mail-outline"
+            leftIcon={<Ionicons name="mail-outline" size={20} color={theme.colors.gray500} />}
           />
         </View>
 
@@ -187,8 +246,8 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
             onChangeText={setPassword}
             placeholder="En az 6 karakter"
             secureTextEntry={!showPassword}
-            leftIcon="lock-closed-outline"
-            rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
+            leftIcon={<Ionicons name="lock-closed-outline" size={20} color={theme.colors.gray500} />}
+            rightIcon={<Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={theme.colors.gray500} />}
             onRightIconPress={() => setShowPassword(!showPassword)}
           />
         </View>
@@ -201,8 +260,8 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
             onChangeText={setConfirmPassword}
             placeholder="Şifrenizi tekrar girin"
             secureTextEntry={!showConfirmPassword}
-            leftIcon="lock-closed-outline"
-            rightIcon={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
+            leftIcon={<Ionicons name="lock-closed-outline" size={20} color={theme.colors.gray500} />}
+            rightIcon={<Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={20} color={theme.colors.gray500} />}
             onRightIconPress={() => setShowConfirmPassword(!showConfirmPassword)}
           />
         </View>
@@ -245,6 +304,67 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
             <Text style={{ color: theme.colors.teal }}>Gizlilik Politikası</Text>'nı kabul ediyorum
           </Text>
         </TouchableOpacity>
+
+        {/* Email Verification Status */}
+        {emailVerificationSent && (
+          <View
+            style={{
+              backgroundColor: theme.colors.tealLight,
+              padding: theme.spacing.md,
+              borderRadius: theme.borderRadius.lg,
+              marginBottom: theme.spacing.lg,
+              borderWidth: 1,
+              borderColor: theme.colors.teal,
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm }}>
+              <Ionicons name="mail" size={20} color={theme.colors.teal} />
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.sm,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  color: theme.colors.teal,
+                  marginLeft: theme.spacing.sm,
+                }}
+              >
+                Email Doğrulama Gönderildi
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.sm,
+                color: theme.colors.navy,
+                lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
+              }}
+            >
+              {email} adresine doğrulama linki gönderildi. Email kutunuzu kontrol edin ve linke tıklayın.
+            </Text>
+            <TouchableOpacity
+              style={{
+                marginTop: theme.spacing.sm,
+                paddingVertical: theme.spacing.sm,
+                paddingHorizontal: theme.spacing.md,
+                backgroundColor: theme.colors.teal,
+                borderRadius: theme.borderRadius.md,
+                alignSelf: 'flex-start',
+              }}
+              onPress={() => setEmailVerificationSent(false)}
+            >
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.sm,
+                  fontWeight: theme.typography.fontWeight.medium,
+                  color: theme.colors.white,
+                }}
+              >
+                Tekrar Dene
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Sign Up Button */}
         <Button

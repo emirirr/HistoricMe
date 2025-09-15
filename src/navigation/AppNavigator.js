@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useAuth } from '@clerk/clerk-expo';
 
 // Screens
 import SplashScreen from '../screens/SplashScreen';
@@ -16,6 +17,7 @@ const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const [currentScreen, setCurrentScreen] = useState('Splash');
+  const { isSignedIn, isLoaded } = useAuth();
 
   const handleSplashFinish = () => {
     setCurrentScreen('Onboarding');
@@ -26,6 +28,8 @@ const AppNavigator = () => {
   };
 
   const handleLoginSuccess = (method) => {
+    // Clerk otomatik olarak authentication state'i yönetir
+    // Burada sadece navigation'ı güncelle
     setCurrentScreen('Upload');
   };
 
@@ -58,6 +62,16 @@ const AppNavigator = () => {
   };
 
   const renderScreen = () => {
+    // Clerk yüklenene kadar splash screen göster
+    if (!isLoaded) {
+      return <SplashScreen onFinish={handleSplashFinish} />;
+    }
+
+    // Eğer kullanıcı giriş yapmışsa ana uygulamaya yönlendir
+    if (isSignedIn && currentScreen === 'Login') {
+      setCurrentScreen('Upload');
+    }
+
     switch (currentScreen) {
       case 'Onboarding':
         return <OnboardingScreen onComplete={handleOnboardingComplete} />;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { useSignIn, useOAuth } from '@clerk/clerk-expo';
 import { Button, Input } from '../components/ui';
 import { theme } from '../styles/theme';
 
@@ -9,14 +10,27 @@ const LoginScreen = ({ onLoginSuccess, onGoToSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
+  const { startOAuthFlow: appleAuth } = useOAuth({ strategy: 'oauth_apple' });
 
   const handleGoogleLogin = async () => {
+    if (!isLoaded) return;
+    
     setIsLoading(true);
     try {
-      // Google login logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onLoginSuccess('google');
+      const { createdSessionId, signIn, signUp, setActive } = await googleAuth();
+      
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        onLoginSuccess('google');
+      } else if (signIn || signUp) {
+        // OAuth flow devam ediyor, kullanıcıyı bilgilendir
+        Alert.alert('Bilgi', 'OAuth işlemi devam ediyor...');
+      }
     } catch (error) {
+      console.error('Google login error:', error);
       Alert.alert('Hata', 'Google ile giriş yapılırken bir hata oluştu.');
     } finally {
       setIsLoading(false);
@@ -24,12 +38,21 @@ const LoginScreen = ({ onLoginSuccess, onGoToSignUp }) => {
   };
 
   const handleAppleLogin = async () => {
+    if (!isLoaded) return;
+    
     setIsLoading(true);
     try {
-      // Apple login logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onLoginSuccess('apple');
+      const { createdSessionId, signIn, signUp, setActive } = await appleAuth();
+      
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        onLoginSuccess('apple');
+      } else if (signIn || signUp) {
+        // OAuth flow devam ediyor, kullanıcıyı bilgilendir
+        Alert.alert('Bilgi', 'OAuth işlemi devam ediyor...');
+      }
     } catch (error) {
+      console.error('Apple login error:', error);
       Alert.alert('Hata', 'Apple ile giriş yapılırken bir hata oluştu.');
     } finally {
       setIsLoading(false);
@@ -41,6 +64,8 @@ const LoginScreen = ({ onLoginSuccess, onGoToSignUp }) => {
   };
 
   const handleEmailLogin = async () => {
+    if (!isLoaded) return;
+    
     if (!email || !password) {
       Alert.alert('Uyarı', 'Lütfen tüm alanları doldurun.');
       return;
@@ -48,10 +73,19 @@ const LoginScreen = ({ onLoginSuccess, onGoToSignUp }) => {
 
     setIsLoading(true);
     try {
-      // Email login logic here
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      onLoginSuccess('email');
+      const result = await signIn.create({
+        identifier: email,
+        password: password,
+      });
+
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId });
+        onLoginSuccess('email');
+      } else {
+        Alert.alert('Hata', 'Giriş tamamlanamadı.');
+      }
     } catch (error) {
+      console.error('Email login error:', error);
       Alert.alert('Hata', 'Giriş yapılırken bir hata oluştu.');
     } finally {
       setIsLoading(false);
