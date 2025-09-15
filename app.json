@@ -5,7 +5,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/ico.png",
     "splash": {
+      "image": "./assets/ico.png",
       "resizeMode": "contain",
       "backgroundColor": "#386160"
     },
@@ -17,7 +19,9 @@
       "bundleIdentifier": "com.historicme.app"
     },
     "android": {
+      "icon": "./assets/ico.png",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/ico.png",
         "backgroundColor": "#386160"
       },
       "package": "com.historicme.app"

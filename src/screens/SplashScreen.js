@@ -107,23 +107,26 @@ const SplashScreen = ({ onFinish }) => {
           transform: [{ scale: scaleAnim }],
         }}
       >
-        {/* Diamond Icon */}
+        {/* HistoricMe Logo */}
         <View
           style={{
             width: 120,
             height: 120,
             borderRadius: 60,
-            backgroundColor: theme.colors.burgundy,
+            backgroundColor: theme.colors.white,
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: theme.spacing.xl,
             ...theme.shadows.lg,
           }}
         >
-          <Ionicons
-            name="diamond"
-            size={60}
-            color={theme.colors.white}
+          <Image
+            source={require('../../assets/ico.png')}
+            style={{
+              width: 90,
+              height: 90,
+              resizeMode: 'contain',
+            }}
           />
         </View>
 

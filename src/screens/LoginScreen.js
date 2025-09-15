@@ -82,17 +82,20 @@ const LoginScreen = ({ onLoginSuccess }) => {
               width: 80,
               height: 80,
               borderRadius: 40,
-              backgroundColor: theme.colors.burgundy,
+              backgroundColor: theme.colors.white,
               justifyContent: 'center',
               alignItems: 'center',
               marginBottom: theme.spacing.lg,
               ...theme.shadows.md,
             }}
           >
-            <Ionicons
-              name="diamond"
-              size={40}
-              color={theme.colors.white}
+            <Image
+              source={require('../../assets/ico.png')}
+              style={{
+                width: 60,
+                height: 60,
+                resizeMode: 'contain',
+              }}
             />
           </View>
           
