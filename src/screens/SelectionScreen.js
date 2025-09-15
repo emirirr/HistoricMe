@@ -316,10 +316,10 @@ const SelectionScreen = ({ onFigureSelected }) => {
               fontFamily: theme.typography.fontFamily.serif,
               fontSize: theme.typography.fontSize.lg,
               fontWeight: theme.typography.fontWeight.bold,
-              color: selectedFigure?.id === figure.id ? theme.colors.white : theme.colors.navy,
+              color: selectedFigure?.id === figure.id ? theme.colors.white : theme.colors.black,
               textAlign: 'center',
               marginBottom: theme.spacing.xs,
-              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
+              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.8)',
               textShadowOffset: { width: 0, height: 1 },
               textShadowRadius: 2,
             }}
@@ -333,9 +333,12 @@ const SelectionScreen = ({ onFigureSelected }) => {
               fontFamily: theme.typography.fontFamily.sans,
               fontSize: theme.typography.fontSize.base,
               fontWeight: theme.typography.fontWeight.semibold,
-              color: selectedFigure?.id === figure.id ? theme.colors.cream : theme.colors.gray600,
+              color: selectedFigure?.id === figure.id ? theme.colors.cream : theme.colors.gray700,
               textAlign: 'center',
               marginBottom: theme.spacing.xs,
+              textShadowColor: selectedFigure?.id === figure.id ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.8)',
+              textShadowOffset: { width: 0, height: 1 },
+              textShadowRadius: 2,
             }}
           >
             {figure.title}
