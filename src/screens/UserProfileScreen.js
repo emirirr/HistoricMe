@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions, Animated } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions, Animated, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Card, Input } from '../components/ui';
@@ -74,7 +74,13 @@ const UserProfileScreen = ({ onProfileComplete }) => {
   ];
 
   const updateProfileData = (field, value) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    // Numeric alanlar için sadece rakamları kabul et
+    if (['height', 'weight', 'age'].includes(field)) {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setProfileData(prev => ({ ...prev, [field]: numericValue }));
+    } else {
+      setProfileData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleNext = () => {
@@ -193,30 +199,69 @@ const UserProfileScreen = ({ onProfileComplete }) => {
         <View style={{ gap: theme.spacing.md }}>
           <Input
             label="Boy (cm)"
-            placeholder="Örn: 175"
+            placeholder="175"
             value={profileData.height}
             onChangeText={(text) => updateProfileData('height', text)}
             keyboardType="numeric"
+            maxLength={3}
             leftIcon={<Ionicons name="resize" size={20} color={theme.colors.gray500} />}
           />
           
           <Input
             label="Kilo (kg)"
-            placeholder="Örn: 70"
+            placeholder="70"
             value={profileData.weight}
             onChangeText={(text) => updateProfileData('weight', text)}
             keyboardType="numeric"
+            maxLength={3}
             leftIcon={<Ionicons name="scale" size={20} color={theme.colors.gray500} />}
           />
           
-          <Input
-            label="Yaş"
-            placeholder="Örn: 25"
-            value={profileData.age}
-            onChangeText={(text) => updateProfileData('age', text)}
-            keyboardType="numeric"
-            leftIcon={<Ionicons name="calendar" size={20} color={theme.colors.gray500} />}
-          />
+          <View style={{ marginBottom: theme.spacing.md }}>
+            <Text style={{
+              fontSize: theme.typography.fontSize.sm,
+              fontFamily: theme.typography.fontFamily.sans,
+              fontWeight: theme.typography.fontWeight.medium,
+              color: theme.colors.navy,
+              marginBottom: theme.spacing.xs,
+            }}>
+              Yaş
+            </Text>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: theme.colors.cream,
+              borderWidth: 2,
+              borderColor: theme.colors.creamDark,
+              borderRadius: theme.borderRadius.lg,
+              paddingHorizontal: theme.spacing.md,
+              paddingVertical: theme.spacing.sm,
+              minHeight: 48,
+              ...theme.shadows.sm,
+            }}>
+              <Ionicons name="calendar" size={20} color={theme.colors.gray500} style={{ marginRight: theme.spacing.sm }} />
+              <TextInput
+                style={{
+                  flex: 1,
+                  fontSize: theme.typography.fontSize.base,
+                  fontFamily: theme.typography.fontFamily.sans,
+                  color: theme.colors.black,
+                }}
+                placeholder="25"
+                placeholderTextColor={theme.colors.gray500}
+                value={profileData.age}
+                onChangeText={(text) => {
+                  console.log('Age input changed:', text);
+                  setProfileData(prev => ({ ...prev, age: text }));
+                }}
+                keyboardType="numeric"
+                maxLength={3}
+                autoCapitalize="none"
+                autoCorrect={false}
+                editable={true}
+              />
+            </View>
+          </View>
         </View>
       </Card>
     </Animated.View>
@@ -365,8 +410,10 @@ const UserProfileScreen = ({ onProfileComplete }) => {
           </Text>
         </View>
 
-        <View
-          style={{
+        <ScrollView
+          style={{ maxHeight: 400 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
@@ -413,7 +460,7 @@ const UserProfileScreen = ({ onProfileComplete }) => {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       </Card>
     </Animated.View>
   );
@@ -681,7 +728,11 @@ const UserProfileScreen = ({ onProfileComplete }) => {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: theme.spacing.md }}
+        contentContainerStyle={{ 
+          flexGrow: 1,
+          padding: theme.spacing.md,
+          paddingBottom: theme.spacing.xl
+        }}
         showsVerticalScrollIndicator={false}
       >
         {renderProgressBar()}
@@ -695,17 +746,24 @@ const UserProfileScreen = ({ onProfileComplete }) => {
           backgroundColor: theme.colors.white,
           borderTopWidth: 1,
           borderTopColor: theme.colors.gray200,
+          ...theme.shadows.md,
         }}
       >
         <Button
-          title={currentStep === steps.length - 1 ? 'Profili Tamamla' : 'Devam Et'}
-          variant="primary"
+          title={currentStep === steps.length - 1 ? 'Profili Tamamla ve Başla' : 'Devam Et'}
+          variant="secondary"
           size="lg"
           onPress={handleNext}
           disabled={!canProceed()}
+          style={{
+            backgroundColor: !canProceed() ? theme.colors.gray300 : theme.colors.teal,
+            borderRadius: theme.borderRadius.xl,
+            paddingVertical: theme.spacing.lg,
+            ...theme.shadows.lg,
+          }}
           icon={
             <Ionicons
-              name={currentStep === steps.length - 1 ? 'checkmark' : 'arrow-forward'}
+              name={currentStep === steps.length - 1 ? 'checkmark-circle' : 'arrow-forward-circle'}
               size={24}
               color={theme.colors.white}
             />

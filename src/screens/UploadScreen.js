@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, Dimensions, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '@clerk/clerk-expo';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Card, LoadingSpinner } from '../components/ui';
 import { theme } from '../styles/theme';
@@ -13,29 +12,7 @@ const UploadScreen = ({ onPhotoSelected }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [faceDetected, setFaceDetected] = useState(false);
-  const { signOut } = useAuth();
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Çıkış Yap',
-      'Hesabınızdan çıkış yapmak istediğinizden emin misiniz?',
-      [
-        { text: 'İptal', style: 'cancel' },
-        {
-          text: 'Çıkış Yap',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await signOut();
-            } catch (error) {
-              console.error('Logout error:', error);
-              Alert.alert('Hata', 'Çıkış yapılırken bir hata oluştu.');
-            }
-          },
-        },
-      ]
-    );
-  };
 
   const requestPermissions = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -133,35 +110,16 @@ const UploadScreen = ({ onPhotoSelected }) => {
   };
 
   const renderUploadOptions = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      {/* Logout Button */}
-      <View style={{ position: 'absolute', top: 50, right: 20, zIndex: 1 }}>
-        <TouchableOpacity
-          onPress={handleLogout}
-          style={{
-            backgroundColor: theme.colors.burgundy,
-            paddingHorizontal: theme.spacing.md,
-            paddingVertical: theme.spacing.sm,
-            borderRadius: theme.borderRadius.lg,
-            flexDirection: 'row',
-            alignItems: 'center',
-            ...theme.shadows.sm,
-          }}
-        >
-          <Ionicons name="log-out-outline" size={16} color={theme.colors.white} />
-          <Text
-            style={{
-              color: theme.colors.white,
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: theme.typography.fontSize.sm,
-              fontWeight: theme.typography.fontWeight.medium,
-              marginLeft: theme.spacing.xs,
-            }}
-          >
-            Çıkış
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView 
+      style={{ flex: 1 }}
+      contentContainerStyle={{ 
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: theme.spacing.xl
+      }}
+      showsVerticalScrollIndicator={false}
+    >
 
       {/* Header */}
       <View style={{ alignItems: 'center', marginBottom: theme.spacing['3xl'] }}>
@@ -269,11 +227,20 @@ const UploadScreen = ({ onPhotoSelected }) => {
           </Text>
         </View>
       </Card>
-    </View>
+    </ScrollView>
   );
 
   const renderImagePreview = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <ScrollView 
+      style={{ flex: 1 }}
+      contentContainerStyle={{ 
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: theme.spacing.xl
+      }}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Success Header */}
       <View style={{ alignItems: 'center', marginBottom: theme.spacing.xl }}>
         <View
@@ -387,7 +354,7 @@ const UploadScreen = ({ onPhotoSelected }) => {
           iconPosition="left"
         />
       </View>
-    </View>
+    </ScrollView>
   );
 
   if (isProcessing) {

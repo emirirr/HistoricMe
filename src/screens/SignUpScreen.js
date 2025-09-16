@@ -6,19 +6,17 @@ import { useSignUp, useOAuth } from '@clerk/clerk-expo';
 import { Button, Input } from '../components/ui';
 import { theme } from '../styles/theme';
 
-const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
+const SignUpScreen = ({ onSignUpSuccess, onSignUpWithVerification, onBackToLogin }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [emailVerificationSent, setEmailVerificationSent] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [showVerificationInput, setShowVerificationInput] = useState(false);
   
   const { signUp, setActive, isLoaded } = useSignUp();
   const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
@@ -71,7 +69,7 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
   const handleEmailSignUp = async () => {
     if (!isLoaded) return;
     
-    if (!email || !password || !confirmPassword) {
+    if (!email || !username || !password || !confirmPassword) {
       Alert.alert('Uyarı', 'Lütfen tüm alanları doldurun.');
       return;
     }
@@ -80,6 +78,17 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert('Uyarı', 'Lütfen geçerli bir email adresi girin.');
+      return;
+    }
+
+    // Username validation
+    if (username.length < 3) {
+      Alert.alert('Uyarı', 'Kullanıcı adı en az 3 karakter olmalıdır.');
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      Alert.alert('Uyarı', 'Kullanıcı adı sadece harf, rakam ve alt çizgi içerebilir.');
       return;
     }
 
@@ -101,10 +110,11 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
     setIsLoading(true);
     try {
       console.log('Clerk signUp object:', signUp);
-      console.log('Attempting to create account with:', { email });
+      console.log('Attempting to create account with:', { email, username });
       
       const result = await signUp.create({
         emailAddress: email,
+        username: username,
         password: password,
       });
       
@@ -117,13 +127,10 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
         // Email verification gerekli - email gönder
         try {
           await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-          setEmailVerificationSent(true);
-          setShowVerificationInput(true);
-          Alert.alert(
-            'Email Doğrulama Gönderildi',
-            'Email adresinize doğrulama kodu gönderildi. Lütfen email kutunuzu kontrol edin.',
-            [{ text: 'Tamam' }]
-          );
+          // Doğrulama sayfasına yönlendir
+          if (onSignUpWithVerification) {
+            onSignUpWithVerification(email, signUp);
+          }
         } catch (verificationError) {
           console.error('Email verification preparation error:', verificationError);
           Alert.alert('Hata', 'Email doğrulama kodu gönderilemedi. Lütfen tekrar deneyin.');
@@ -137,9 +144,20 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
       
       // Clerk error mesajlarını daha detaylı göster
       if (error.errors && error.errors.length > 0) {
-        const errorMessage = error.errors[0].message;
         const errorCode = error.errors[0].code;
-        Alert.alert('Kayıt Hatası', `${errorMessage}\n\nHata Kodu: ${errorCode}`);
+        const errorMessage = error.errors[0].message;
+        
+        // Özel hata mesajları
+        if (errorCode === 'form_password_pwned') {
+          Alert.alert(
+            'Güvenlik Uyarısı', 
+            'Bu şifre daha önce veri ihlali yaşamış. Güvenliğiniz için lütfen farklı bir şifre kullanın.\n\nGüçlü bir şifre için:\n• En az 8 karakter\n• Büyük ve küçük harf\n• Rakam ve özel karakter\n• Kişisel bilgi içermemeli'
+          );
+        } else if (errorCode === 'form_identifier_exists') {
+          Alert.alert('Hata', 'Bu email adresi zaten kullanımda. Lütfen farklı bir email adresi deneyin.');
+        } else {
+          Alert.alert('Kayıt Hatası', `${errorMessage}\n\nHata Kodu: ${errorCode}`);
+        }
       } else if (error.message) {
         Alert.alert('Kayıt Hatası', error.message);
       } else {
@@ -150,43 +168,6 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
     }
   };
 
-  const handleEmailVerification = async () => {
-    if (!isLoaded || !verificationCode) return;
-    
-    setIsLoading(true);
-    try {
-      const result = await signUp.attemptEmailAddressVerification({
-        code: verificationCode,
-      });
-      
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
-        onSignUpSuccess('email');
-      } else {
-        Alert.alert('Hata', 'Doğrulama kodu geçersiz. Lütfen tekrar deneyin.');
-      }
-    } catch (error) {
-      console.error('Email verification error:', error);
-      Alert.alert('Hata', 'Doğrulama kodu geçersiz. Lütfen tekrar deneyin.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResendVerificationCode = async () => {
-    if (!isLoaded) return;
-    
-    setIsLoading(true);
-    try {
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-      Alert.alert('Başarılı', 'Yeni doğrulama kodu gönderildi.');
-    } catch (error) {
-      console.error('Resend verification error:', error);
-      Alert.alert('Hata', 'Doğrulama kodu tekrar gönderilemedi.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <ScrollView
@@ -285,6 +266,18 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
           />
         </View>
 
+        {/* Username */}
+        <View style={{ marginBottom: theme.spacing.lg }}>
+          <Input
+            label="Kullanıcı Adı"
+            value={username}
+            onChangeText={setUsername}
+            placeholder="kullaniciadi"
+            autoCapitalize="none"
+            leftIcon={<Ionicons name="person-outline" size={20} color={theme.colors.gray500} />}
+          />
+        </View>
+
         {/* Password */}
         <View style={{ marginBottom: theme.spacing.lg }}>
           <Input
@@ -352,125 +345,13 @@ const SignUpScreen = ({ onSignUpSuccess, onBackToLogin }) => {
           </Text>
         </TouchableOpacity>
 
-        {/* Email Verification Status */}
-        {emailVerificationSent && (
-          <View
-            style={{
-              backgroundColor: theme.colors.tealLight,
-              padding: theme.spacing.md,
-              borderRadius: theme.borderRadius.lg,
-              marginBottom: theme.spacing.lg,
-              borderWidth: 1,
-              borderColor: theme.colors.teal,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm }}>
-              <Ionicons name="mail" size={20} color={theme.colors.teal} />
-              <Text
-                style={{
-                  fontFamily: theme.typography.fontFamily.sans,
-                  fontSize: theme.typography.fontSize.sm,
-                  fontWeight: theme.typography.fontWeight.semibold,
-                  color: theme.colors.teal,
-                  marginLeft: theme.spacing.sm,
-                }}
-              >
-                Email Doğrulama Gönderildi
-              </Text>
-            </View>
-            <Text
-              style={{
-                fontFamily: theme.typography.fontFamily.sans,
-                fontSize: theme.typography.fontSize.sm,
-                color: theme.colors.navy,
-                lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
-                marginBottom: theme.spacing.md,
-              }}
-            >
-              {email} adresine doğrulama kodu gönderildi. Email kutunuzu kontrol edin.
-            </Text>
-            
-            {/* Verification Code Input */}
-            {showVerificationInput && (
-              <View style={{ marginBottom: theme.spacing.md }}>
-                <Input
-                  label="Doğrulama Kodu"
-                  value={verificationCode}
-                  onChangeText={setVerificationCode}
-                  placeholder="6 haneli kodu girin"
-                  keyboardType="numeric"
-                  maxLength={6}
-                  leftIcon={<Ionicons name="key-outline" size={20} color={theme.colors.gray500} />}
-                />
-                <Button
-                  title="Doğrula"
-                  onPress={handleEmailVerification}
-                  loading={isLoading}
-                  style={{ marginTop: theme.spacing.sm }}
-                />
-              </View>
-            )}
-            
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <TouchableOpacity
-                style={{
-                  paddingVertical: theme.spacing.sm,
-                  paddingHorizontal: theme.spacing.md,
-                  backgroundColor: theme.colors.teal,
-                  borderRadius: theme.borderRadius.md,
-                }}
-                onPress={handleResendVerificationCode}
-                disabled={isLoading}
-              >
-                <Text
-                  style={{
-                    fontFamily: theme.typography.fontFamily.sans,
-                    fontSize: theme.typography.fontSize.sm,
-                    fontWeight: theme.typography.fontWeight.medium,
-                    color: theme.colors.white,
-                  }}
-                >
-                  Tekrar Gönder
-                </Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={{
-                  paddingVertical: theme.spacing.sm,
-                  paddingHorizontal: theme.spacing.md,
-                  backgroundColor: theme.colors.gray,
-                  borderRadius: theme.borderRadius.md,
-                }}
-                onPress={() => {
-                  setEmailVerificationSent(false);
-                  setShowVerificationInput(false);
-                  setVerificationCode('');
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: theme.typography.fontFamily.sans,
-                    fontSize: theme.typography.fontSize.sm,
-                    fontWeight: theme.typography.fontWeight.medium,
-                    color: theme.colors.white,
-                  }}
-                >
-                  İptal
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
         {/* Sign Up Button */}
-        {!emailVerificationSent && (
-          <Button
-            title="Kayıt Ol"
-            onPress={handleEmailSignUp}
-            loading={isLoading}
-            style={{ marginBottom: theme.spacing.lg }}
-          />
-        )}
+        <Button
+          title="Kayıt Ol"
+          onPress={handleEmailSignUp}
+          loading={isLoading}
+          style={{ marginBottom: theme.spacing.lg }}
+        />
 
         {/* Divider */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.lg }}>

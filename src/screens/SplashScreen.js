@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, Dimensions, Image } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, Animated, Dimensions, Image, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
@@ -7,9 +7,41 @@ import { theme } from '../styles/theme';
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = ({ onFinish }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  const slides = [
+    {
+      title: "HistoricMe'ye Hoş Geldiniz",
+      subtitle: "Tarihin büyük figürleriyle tanışın",
+      description: "AI teknolojisi ile kendinizi tarihi karakterlerle birleştirin",
+      icon: "sparkles",
+      color: theme.colors.teal
+    },
+    {
+      title: "Fotoğrafınızı Yükleyin",
+      subtitle: "En iyi sonuç için net bir fotoğraf",
+      description: "Yüzünüzün net göründüğü bir fotoğraf seçin",
+      icon: "camera",
+      color: theme.colors.burgundy
+    },
+    {
+      title: "Tarihi Figür Seçin",
+      subtitle: "Hangi dönemden olmak istersiniz?",
+      description: "Osmanlı, Selçuklu, Bizans ve daha fazlası",
+      icon: "library",
+      color: theme.colors.gold
+    },
+    {
+      title: "Sonucunuzu Görün",
+      subtitle: "AI ile oluşturulan tarihi portreniz",
+      description: "Kendinizi tarihi bir figür olarak görün",
+      icon: "image",
+      color: theme.colors.navy
+    }
+  ];
 
   useEffect(() => {
     const startAnimation = () => {
@@ -25,11 +57,6 @@ const SplashScreen = ({ onFinish }) => {
           friction: 7,
           useNativeDriver: true,
         }),
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
       ]).start();
     };
 
@@ -37,177 +64,229 @@ const SplashScreen = ({ onFinish }) => {
       startAnimation();
     }, 500);
 
+    // Slide otomatik geçiş
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 3000);
+
     const finishTimer = setTimeout(() => {
       if (onFinish) onFinish();
-    }, 2000);
+    }, 12000); // 12 saniye toplam
 
     return () => {
       clearTimeout(timer);
       clearTimeout(finishTimer);
+      clearInterval(slideInterval);
     };
-  }, [fadeAnim, scaleAnim, rotateAnim, onFinish]);
+  }, [fadeAnim, scaleAnim, onFinish]);
 
-  const rotate = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: currentSlide,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [currentSlide, slideAnim]);
 
   return (
-    <LinearGradient
-      colors={[theme.colors.teal, theme.colors.tealDark]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {/* Background Pattern */}
-      <View
+    <View style={{ flex: 1, backgroundColor: theme.colors.cream }}>
+      {/* Header */}
+      <LinearGradient
+        colors={[theme.colors.teal, theme.colors.tealLight]}
         style={{
-          position: 'absolute',
-          top: -100,
-          left: -100,
-          width: width + 200,
-          height: height + 200,
-          opacity: 0.1,
+          paddingTop: 60,
+          paddingBottom: 40,
+          paddingHorizontal: theme.spacing.xl,
+          borderBottomLeftRadius: theme.borderRadius['2xl'],
+          borderBottomRightRadius: theme.borderRadius['2xl'],
         }}
       >
         <Animated.View
           style={{
-            transform: [{ rotate }],
-            width: '100%',
-            height: '100%',
+            alignItems: 'center',
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
           }}
         >
-          {[...Array(8)].map((_, i) => (
-            <View
-              key={i}
+          {/* HistoricMe Logo */}
+          <View
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: theme.colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: theme.spacing.lg,
+              ...theme.shadows.lg,
+            }}
+          >
+            <Image
+              source={require('../../assets/ico.png')}
               style={{
-                position: 'absolute',
-                width: 60,
-                height: 60,
-                borderRadius: 30,
-                backgroundColor: theme.colors.gold,
-                top: `${(i * 12.5) % 100}%`,
-                left: `${(i * 15.625) % 100}%`,
-                opacity: 0.3,
+                width: 70,
+                height: 70,
+                resizeMode: 'contain',
               }}
             />
-          ))}
-        </Animated.View>
-      </View>
+          </View>
 
-      {/* Main Content */}
-      <Animated.View
-        style={{
-          alignItems: 'center',
-          opacity: fadeAnim,
-          transform: [{ scale: scaleAnim }],
-        }}
-      >
-        {/* HistoricMe Logo */}
-        <View
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            backgroundColor: theme.colors.white,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: theme.spacing.xl,
-            ...theme.shadows.lg,
-          }}
-        >
-          <Image
-            source={require('../../assets/ico.png')}
+          {/* App Title */}
+          <Text
             style={{
-              width: 90,
-              height: 90,
-              resizeMode: 'contain',
+              fontFamily: theme.typography.fontFamily.serif,
+              fontSize: theme.typography.fontSize['4xl'],
+              fontWeight: theme.typography.fontWeight.black,
+              color: theme.colors.white,
+              textAlign: 'center',
+              marginBottom: theme.spacing.sm,
+              textShadowColor: 'rgba(0, 0, 0, 0.3)',
+              textShadowOffset: { width: 2, height: 2 },
+              textShadowRadius: 4,
             }}
-          />
-        </View>
+          >
+            HistoricMe
+          </Text>
 
-        {/* App Title */}
-        <Text
-          style={{
-            fontFamily: theme.typography.fontFamily.serif,
-            fontSize: theme.typography.fontSize['5xl'],
-            fontWeight: theme.typography.fontWeight.black,
-            color: theme.colors.white,
-            textAlign: 'center',
-            marginBottom: theme.spacing.sm,
-            textShadowColor: 'rgba(0, 0, 0, 0.3)',
-            textShadowOffset: { width: 2, height: 2 },
-            textShadowRadius: 4,
-          }}
-        >
-          HistoricMe
-        </Text>
-
-        {/* Subtitle */}
-        <Text
-          style={{
-            fontFamily: theme.typography.fontFamily.sans,
-            fontSize: theme.typography.fontSize.lg,
-            color: theme.colors.cream,
-            textAlign: 'center',
-            opacity: 0.9,
-            letterSpacing: 1,
-          }}
-        >
-          Tarihin Büyük Figürleriyle
-        </Text>
-
-        {/* Decorative Line */}
-        <View
-          style={{
-            width: 100,
-            height: 3,
-            backgroundColor: theme.colors.burgundy,
-            marginTop: theme.spacing.lg,
-            borderRadius: 2,
-          }}
-        />
-      </Animated.View>
-
-      {/* Loading Indicator */}
-      <Animated.View
-        style={{
-          position: 'absolute',
-          bottom: 100,
-          opacity: fadeAnim,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
+          {/* Subtitle */}
           <Text
             style={{
               fontFamily: theme.typography.fontFamily.sans,
-              fontSize: theme.typography.fontSize.base,
-              color: theme.colors.cream,
-              marginRight: theme.spacing.sm,
+              fontSize: theme.typography.fontSize.lg,
+              color: theme.colors.white,
+              textAlign: 'center',
+              opacity: 0.9,
+              letterSpacing: 1,
             }}
           >
-            Yükleniyor
+            Tarihin Büyük Figürleriyle Tanışın
           </Text>
-          {[...Array(3)].map((_, i) => (
+        </Animated.View>
+      </LinearGradient>
+
+      {/* Slides Container */}
+      <View style={{ flex: 1, padding: theme.spacing.lg }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+        >
+          {slides.map((slide, index) => (
             <Animated.View
-              key={i}
+              key={index}
               style={{
-                width: 8,
+                opacity: currentSlide === index ? 1 : 0.3,
+                transform: [{
+                  scale: currentSlide === index ? 1 : 0.9
+                }],
+                marginBottom: theme.spacing.xl,
+                alignItems: 'center',
+              }}
+            >
+              {/* Icon */}
+              <View
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  backgroundColor: slide.color,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: theme.spacing.lg,
+                  ...theme.shadows.md,
+                }}
+              >
+                <Ionicons name={slide.icon} size={40} color={theme.colors.white} />
+              </View>
+
+              {/* Title */}
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.serif,
+                  fontSize: theme.typography.fontSize['2xl'],
+                  fontWeight: theme.typography.fontWeight.bold,
+                  color: theme.colors.navy,
+                  textAlign: 'center',
+                  marginBottom: theme.spacing.sm,
+                }}
+              >
+                {slide.title}
+              </Text>
+
+              {/* Subtitle */}
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.lg,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  color: slide.color,
+                  textAlign: 'center',
+                  marginBottom: theme.spacing.md,
+                }}
+              >
+                {slide.subtitle}
+              </Text>
+
+              {/* Description */}
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.base,
+                  color: theme.colors.gray600,
+                  textAlign: 'center',
+                  lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.base,
+                  paddingHorizontal: theme.spacing.md,
+                }}
+              >
+                {slide.description}
+              </Text>
+            </Animated.View>
+          ))}
+        </ScrollView>
+
+        {/* Slide Indicators */}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: theme.spacing.lg,
+          }}
+        >
+          {slides.map((_, index) => (
+            <View
+              key={index}
+              style={{
+                width: currentSlide === index ? 24 : 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: theme.colors.burgundy,
-                marginHorizontal: 2,
-                opacity: fadeAnim,
+                backgroundColor: currentSlide === index ? theme.colors.teal : theme.colors.gray300,
+                marginHorizontal: 4,
               }}
             />
           ))}
-      </Animated.View>
-    </LinearGradient>
+        </View>
+
+        {/* Loading Text */}
+        <Animated.View
+          style={{
+            alignItems: 'center',
+            marginTop: theme.spacing.lg,
+            opacity: fadeAnim,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: theme.typography.fontFamily.sans,
+              fontSize: theme.typography.fontSize.sm,
+              color: theme.colors.gray500,
+              textAlign: 'center',
+            }}
+          >
+            Uygulama hazırlanıyor...
+          </Text>
+        </Animated.View>
+      </View>
+    </View>
   );
 };
 

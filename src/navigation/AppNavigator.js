@@ -9,11 +9,13 @@ import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import VerificationScreen from '../screens/VerificationScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import UploadScreen from '../screens/UploadScreen';
 import SelectionScreen from '../screens/SelectionScreen';
 import ResultScreen from '../screens/ResultScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import DiscoverScreen from '../screens/DiscoverScreen';
 
 // Components
 import { Navbar } from '../components/ui';
@@ -22,6 +24,8 @@ const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const [currentScreen, setCurrentScreen] = useState('Splash');
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpData, setSignUpData] = useState(null);
   const { isSignedIn, isLoaded } = useAuth();
 
   const handleSplashFinish = () => {
@@ -40,6 +44,24 @@ const AppNavigator = () => {
 
   const handleSignUpSuccess = (method) => {
     setCurrentScreen('UserProfile');
+  };
+
+  const handleSignUpWithVerification = (email, signUpObj) => {
+    setSignUpEmail(email);
+    setSignUpData(signUpObj);
+    setCurrentScreen('Verification');
+  };
+
+  const handleVerificationSuccess = (method) => {
+    console.log('handleVerificationSuccess called with method:', method);
+    console.log('Navigating to UserProfile screen...');
+    setCurrentScreen('UserProfile');
+  };
+
+  const handleBackToSignUp = () => {
+    setSignUpEmail('');
+    setSignUpData(null);
+    setCurrentScreen('SignUp');
   };
 
   const handleProfileComplete = (profileData) => {
@@ -70,6 +92,10 @@ const AppNavigator = () => {
     setCurrentScreen(screen);
   };
 
+  const handleLogout = () => {
+    setCurrentScreen('Login');
+  };
+
   const renderScreen = () => {
     // Clerk yüklenene kadar splash screen göster
     if (!isLoaded) {
@@ -87,7 +113,9 @@ const AppNavigator = () => {
       case 'Login':
         return <LoginScreen onLoginSuccess={handleLoginSuccess} onGoToSignUp={handleGoToSignUp} />;
       case 'SignUp':
-        return <SignUpScreen onSignUpSuccess={handleSignUpSuccess} onBackToLogin={handleBackToLogin} />;
+        return <SignUpScreen onSignUpSuccess={handleSignUpSuccess} onSignUpWithVerification={handleSignUpWithVerification} onBackToLogin={handleBackToLogin} />;
+      case 'Verification':
+        return <VerificationScreen email={signUpEmail} signUpData={signUpData} onVerificationSuccess={handleVerificationSuccess} onBackToSignUp={handleBackToSignUp} />;
       case 'UserProfile':
         return <UserProfileScreen onProfileComplete={handleProfileComplete} />;
       case 'Upload':
@@ -97,14 +125,16 @@ const AppNavigator = () => {
       case 'Result':
         return <ResultScreen onNewPhoto={handleNewPhoto} />;
       case 'Profile':
-        return <ProfileScreen onNavigate={handleNavigate} />;
+        return <ProfileScreen onNavigate={handleNavigate} onLogout={handleLogout} />;
+      case 'Discover':
+        return <DiscoverScreen onNavigate={handleNavigate} />;
       default:
         return <SplashScreen onFinish={handleSplashFinish} />;
     }
   };
 
   // Navbar'ın gösterileceği sayfalar
-  const showNavbar = ['Upload', 'Profile'].includes(currentScreen);
+  const showNavbar = ['Upload', 'Discover', 'Profile'].includes(currentScreen);
 
   return (
     <NavigationContainer>

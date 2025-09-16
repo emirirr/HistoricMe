@@ -8,7 +8,7 @@ export const theme = {
     white: '#FFFFFF',
     
     // Extended palette
-    creamLight: '#F5F0E6',
+    creamLight: '#F5F0E6',  
     creamDark: '#E8E0D3',
     tealLight: '#4A7A79',
     tealDark: '#2A4A49',

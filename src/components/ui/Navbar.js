@@ -13,6 +13,12 @@ const Navbar = ({ currentScreen, onNavigate, user }) => {
       activeIcon: 'home',
     },
     {
+      id: 'Discover',
+      title: 'Keşfet',
+      icon: 'compass-outline',
+      activeIcon: 'compass',
+    },
+    {
       id: 'Profile',
       title: 'Profil',
       icon: 'person-outline',
@@ -34,10 +40,10 @@ const Navbar = ({ currentScreen, onNavigate, user }) => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'center',
+          justifyContent: 'space-around',
           alignItems: 'center',
-          paddingHorizontal: theme.spacing.lg,
-          gap: theme.spacing.lg,
+          paddingHorizontal: theme.spacing.md,
+          gap: theme.spacing.sm,
         }}
       >
         {navItems.map((item) => {
@@ -50,12 +56,12 @@ const Navbar = ({ currentScreen, onNavigate, user }) => {
               style={{
                 alignItems: 'center',
                 paddingVertical: theme.spacing.sm,
-                paddingHorizontal: theme.spacing.md,
+                paddingHorizontal: theme.spacing.sm,
                 borderRadius: theme.borderRadius.md,
                 backgroundColor: isActive ? theme.colors.burgundy : 'transparent',
-                minWidth: 80,
+                minWidth: 70,
                 flex: 1,
-                maxWidth: 120,
+                maxWidth: 100,
               }}
             >
               <View

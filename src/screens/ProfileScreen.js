@@ -9,12 +9,12 @@ import apiService from '../services/api';
 
 const { width } = Dimensions.get('window');
 
-const ProfileScreen = ({ onNavigate }) => {
+const ProfileScreen = ({ onNavigate, onLogout }) => {
   const { user } = useUser();
   const { signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
 
-  // Kullanıcı profili - Clerk'ten alınan veriler
+  // Kullanıcı profili - Clerk'ten alınan verilerbir
   const [userProfile, setUserProfile] = useState({
     firstName: user?.firstName || 'Kullanıcı',
     lastName: user?.lastName || 'Adı',
@@ -255,6 +255,10 @@ const ProfileScreen = ({ onNavigate }) => {
           onPress: async () => {
             try {
               await signOut();
+              // Çıkış başarılı olduktan sonra Login ekranına yönlendir
+              if (onLogout) {
+                onLogout();
+              }
             } catch (error) {
               console.error('Sign out error:', error);
             }
@@ -446,7 +450,7 @@ const ProfileScreen = ({ onNavigate }) => {
               fontFamily: theme.typography.fontFamily.sans,
               fontSize: theme.typography.fontSize.base,
               fontWeight: theme.typography.fontWeight.semibold,
-              color: theme.colors.burgundy,
+              color: theme.colors.white,
               flex: 1,
             }}
           >
@@ -1089,104 +1093,110 @@ const ProfileScreen = ({ onNavigate }) => {
         visible={showProfileEdit}
         onClose={() => setShowProfileEdit(false)}
         title="Profil Bilgilerini Düzenle"
-        contentStyle={{ padding: 0 }}
+        contentStyle={{ padding: 0, maxHeight: '80%' }}
       >
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          paddingTop: theme.spacing.md 
-        }}>
-          <Text
-            style={{
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
-              color: theme.colors.gray600,
-              textAlign: 'center',
-              marginBottom: theme.spacing.lg,
-            }}
-          >
-            Profil bilgilerinizi güncelleyin
-          </Text>
-        </View>
-        
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          gap: width < 375 ? theme.spacing.sm : theme.spacing.md 
-        }}>
-          <View style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            borderWidth: 1,
-            borderColor: theme.colors.gray200,
-            ...theme.shadows.sm,
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: theme.spacing.lg }}
+          style={{ maxHeight: '100%' }}
+        >
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
+            paddingTop: theme.spacing.md 
           }}>
-            <Input
-              label="Ad"
-              value={editProfile.firstName}
-              onChangeText={(text) => setEditProfile(prev => ({ ...prev, firstName: text }))}
-              placeholder="Adınızı girin"
-              leftIcon={<Ionicons name="person-outline" size={20} color={theme.colors.gray500} />}
-            />
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
+                color: theme.colors.gray600,
+                textAlign: 'center',
+                marginBottom: theme.spacing.lg,
+              }}
+            >
+              Profil bilgilerinizi güncelleyin
+            </Text>
           </View>
           
-          <View style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            borderWidth: 1,
-            borderColor: theme.colors.gray200,
-            ...theme.shadows.sm,
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
+            gap: width < 375 ? theme.spacing.sm : theme.spacing.md 
           }}>
-            <Input
-              label="Soyad"
-              value={editProfile.lastName}
-              onChangeText={(text) => setEditProfile(prev => ({ ...prev, lastName: text }))}
-              placeholder="Soyadınızı girin"
-              leftIcon={<Ionicons name="person-outline" size={20} color={theme.colors.gray500} />}
-            />
+            <View style={{
+              backgroundColor: theme.colors.white,
+              borderRadius: theme.borderRadius.lg,
+              padding: theme.spacing.lg,
+              borderWidth: 1,
+              borderColor: theme.colors.gray200,
+              ...theme.shadows.sm,
+            }}>
+              <Input
+                label="Ad"
+                value={editProfile.firstName}
+                onChangeText={(text) => setEditProfile(prev => ({ ...prev, firstName: text }))}
+                placeholder="Adınızı girin"
+                leftIcon={<Ionicons name="person-outline" size={20} color={theme.colors.gray500} />}
+              />
+            </View>
+            
+            <View style={{
+              backgroundColor: theme.colors.white,
+              borderRadius: theme.borderRadius.lg,
+              padding: theme.spacing.lg,
+              borderWidth: 1,
+              borderColor: theme.colors.gray200,
+              ...theme.shadows.sm,
+            }}>
+              <Input
+                label="Soyad"
+                value={editProfile.lastName}
+                onChangeText={(text) => setEditProfile(prev => ({ ...prev, lastName: text }))}
+                placeholder="Soyadınızı girin"
+                leftIcon={<Ionicons name="person-outline" size={20} color={theme.colors.gray500} />}
+              />
+            </View>
+            
+            <View style={{
+              backgroundColor: theme.colors.white,
+              borderRadius: theme.borderRadius.lg,
+              padding: theme.spacing.lg,
+              borderWidth: 1,
+              borderColor: theme.colors.gray200,
+              ...theme.shadows.sm,
+            }}>
+              <Input
+                label="E-posta"
+                value={editProfile.email}
+                onChangeText={(text) => setEditProfile(prev => ({ ...prev, email: text }))}
+                placeholder="E-posta adresinizi girin"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                leftIcon={<Ionicons name="mail-outline" size={20} color={theme.colors.gray500} />}
+              />
+            </View>
           </View>
           
-          <View style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            borderWidth: 1,
-            borderColor: theme.colors.gray200,
-            ...theme.shadows.sm,
+          <View style={{ 
+            flexDirection: 'row', 
+            gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
+            marginTop: theme.spacing.lg,
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl,
+            paddingBottom: width < 375 ? theme.spacing.lg : theme.spacing.xl,
           }}>
-            <Input
-              label="E-posta"
-              value={editProfile.email}
-              onChangeText={(text) => setEditProfile(prev => ({ ...prev, email: text }))}
-              placeholder="E-posta adresinizi girin"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              leftIcon={<Ionicons name="mail-outline" size={20} color={theme.colors.gray500} />}
+            <Button
+              title="İptal"
+              variant="outline"
+              onPress={() => setShowProfileEdit(false)}
+              style={{ flex: 1 }}
+            />
+            <Button
+              title="Kaydet"
+              onPress={handleProfileUpdate}
+              style={{ flex: 1 }}
+              icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
+              iconPosition="right"
             />
           </View>
-        </View>
-        
-        <View style={{ 
-          flexDirection: 'row', 
-          gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
-          marginTop: theme.spacing.lg,
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-          paddingBottom: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-        }}>
-          <Button
-            title="İptal"
-            variant="outline"
-            onPress={() => setShowProfileEdit(false)}
-            style={{ flex: 1 }}
-          />
-          <Button
-            title="Kaydet"
-            onPress={handleProfileUpdate}
-            style={{ flex: 1 }}
-            icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
-            iconPosition="right"
-          />
-        </View>
+        </ScrollView>
       </Modal>
 
       {/* Notification Settings Modal */}
@@ -1194,152 +1204,158 @@ const ProfileScreen = ({ onNavigate }) => {
         visible={showNotificationSettings}
         onClose={() => setShowNotificationSettings(false)}
         title="Bildirim Ayarları"
-        contentStyle={{ padding: 0 }}
+        contentStyle={{ padding: 0, maxHeight: '80%' }}
       >
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          paddingTop: theme.spacing.md 
-        }}>
-          <Text
-            style={{
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
-              color: theme.colors.gray600,
-              textAlign: 'center',
-              marginBottom: theme.spacing.lg,
-            }}
-          >
-            Hangi bildirimleri almak istediğinizi seçin
-          </Text>
-        </View>
-        
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          gap: width < 375 ? theme.spacing.sm : theme.spacing.md 
-        }}>
-          {Object.entries(notificationSettings).map(([key, value]) => (
-            <View
-              key={key}
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: theme.spacing.lg }}
+          style={{ maxHeight: '100%' }}
+        >
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
+            paddingTop: theme.spacing.md 
+          }}>
+            <Text
               style={{
-                backgroundColor: theme.colors.white,
-                borderRadius: theme.borderRadius.lg,
-                padding: theme.spacing.lg,
-                borderWidth: 1,
-                borderColor: value ? theme.colors.burgundy : theme.colors.gray200,
-                ...theme.shadows.sm,
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
+                color: theme.colors.gray600,
+                textAlign: 'center',
+                marginBottom: theme.spacing.lg,
               }}
             >
-              <TouchableOpacity
-                onPress={() => handleNotificationToggle(key)}
+              Hangi bildirimleri almak istediğinizi seçin
+            </Text>
+          </View>
+          
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
+            gap: width < 375 ? theme.spacing.sm : theme.spacing.md 
+          }}>
+            {Object.entries(notificationSettings).map(([key, value]) => (
+              <View
+                key={key}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  backgroundColor: theme.colors.white,
+                  borderRadius: theme.borderRadius.lg,
+                  padding: theme.spacing.lg,
+                  borderWidth: 1,
+                  borderColor: value ? theme.colors.burgundy : theme.colors.gray200,
+                  ...theme.shadows.sm,
                 }}
               >
-                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                  <View
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 20,
-                      backgroundColor: value ? theme.colors.burgundy : theme.colors.gray100,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginRight: theme.spacing.md,
-                    }}
-                  >
-                    <Ionicons 
-                      name={
-                        key === 'pushNotifications' ? 'notifications-outline' :
-                        key === 'emailNotifications' ? 'mail-outline' :
-                        key === 'newImageNotifications' ? 'image-outline' :
-                        'calendar-outline'
-                      } 
-                      size={20} 
-                      color={value ? theme.colors.white : theme.colors.gray500} 
-                    />
-                  </View>
-                  
-                  <View style={{ flex: 1 }}>
-                    <Text
-                      style={{
-                        fontFamily: theme.typography.fontFamily.sans,
-                        fontSize: theme.typography.fontSize.base,
-                        fontWeight: theme.typography.fontWeight.semibold,
-                        color: value ? theme.colors.burgundy : theme.colors.navy,
-                        marginBottom: theme.spacing.xs,
-                      }}
-                    >
-                      {key === 'pushNotifications' && 'Push Bildirimleri'}
-                      {key === 'emailNotifications' && 'E-posta Bildirimleri'}
-                      {key === 'newImageNotifications' && 'Yeni Görsel Bildirimleri'}
-                      {key === 'weeklyDigest' && 'Haftalık Özet'}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: theme.typography.fontFamily.sans,
-                        fontSize: theme.typography.fontSize.sm,
-                        color: theme.colors.gray600,
-                        lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
-                      }}
-                    >
-                      {key === 'pushNotifications' && 'Uygulama içi bildirimler al'}
-                      {key === 'emailNotifications' && 'E-posta ile bildirimler al'}
-                      {key === 'newImageNotifications' && 'Yeni görsel oluşturulduğunda bildirim al'}
-                      {key === 'weeklyDigest' && 'Haftalık aktivite özeti al'}
-                    </Text>
-                  </View>
-                </View>
-                
-                <View
+                <TouchableOpacity
+                  onPress={() => handleNotificationToggle(key)}
                   style={{
-                    width: 52,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: value ? theme.colors.burgundy : theme.colors.gray300,
-                    justifyContent: 'center',
-                    alignItems: value ? 'flex-end' : 'flex-start',
-                    paddingHorizontal: 3,
-                    marginLeft: theme.spacing.md,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}
                 >
+                  <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        backgroundColor: value ? theme.colors.burgundy : theme.colors.gray100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: theme.spacing.md,
+                      }}
+                    >
+                      <Ionicons 
+                        name={
+                          key === 'pushNotifications' ? 'notifications-outline' :
+                          key === 'emailNotifications' ? 'mail-outline' :
+                          key === 'newImageNotifications' ? 'image-outline' :
+                          'calendar-outline'
+                        } 
+                        size={20} 
+                        color={value ? theme.colors.white : theme.colors.gray500} 
+                      />
+                    </View>
+                    
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: theme.typography.fontFamily.sans,
+                          fontSize: theme.typography.fontSize.base,
+                          fontWeight: theme.typography.fontWeight.semibold,
+                          color: value ? theme.colors.burgundy : theme.colors.navy,
+                          marginBottom: theme.spacing.xs,
+                        }}
+                      >
+                        {key === 'pushNotifications' && 'Push Bildirimleri'}
+                        {key === 'emailNotifications' && 'E-posta Bildirimleri'}
+                        {key === 'newImageNotifications' && 'Yeni Görsel Bildirimleri'}
+                        {key === 'weeklyDigest' && 'Haftalık Özet'}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: theme.typography.fontFamily.sans,
+                          fontSize: theme.typography.fontSize.sm,
+                          color: theme.colors.gray600,
+                          lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
+                        }}
+                      >
+                        {key === 'pushNotifications' && 'Uygulama içi bildirimler al'}
+                        {key === 'emailNotifications' && 'E-posta ile bildirimler al'}
+                        {key === 'newImageNotifications' && 'Yeni görsel oluşturulduğunda bildirim al'}
+                        {key === 'weeklyDigest' && 'Haftalık aktivite özeti al'}
+                      </Text>
+                    </View>
+                  </View>
+                  
                   <View
                     style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 13,
-                      backgroundColor: theme.colors.white,
-                      ...theme.shadows.md,
+                      width: 52,
+                      height: 32,
+                      borderRadius: 16,
+                      backgroundColor: value ? theme.colors.burgundy : theme.colors.gray300,
+                      justifyContent: 'center',
+                      alignItems: value ? 'flex-end' : 'flex-start',
+                      paddingHorizontal: 3,
+                      marginLeft: theme.spacing.md,
                     }}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-        
-        <View style={{ 
-          flexDirection: 'row', 
-          gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
-          marginTop: theme.spacing.lg,
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-          paddingBottom: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-        }}>
-          <Button
-            title="İptal"
-            variant="outline"
-            onPress={() => setShowNotificationSettings(false)}
-            style={{ flex: 1 }}
-          />
-          <Button
-            title="Kaydet"
-            onPress={handleNotificationSave}
-            style={{ flex: 1 }}
-            icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
-            iconPosition="right"
-          />
-        </View>
+                  >
+                    <View
+                      style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: 13,
+                        backgroundColor: theme.colors.white,
+                        ...theme.shadows.md,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+          
+          <View style={{ 
+            flexDirection: 'row', 
+            gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
+            marginTop: theme.spacing.lg,
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl,
+            paddingBottom: width < 375 ? theme.spacing.lg : theme.spacing.xl,
+          }}>
+            <Button
+              title="İptal"
+              variant="outline"
+              onPress={() => setShowNotificationSettings(false)}
+              style={{ flex: 1 }}
+            />
+            <Button
+              title="Kaydet"
+              onPress={handleNotificationSave}
+              style={{ flex: 1 }}
+              icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
+              iconPosition="right"
+            />
+          </View>
+        </ScrollView>
       </Modal>
 
       {/* Privacy Settings Modal */}
@@ -1347,132 +1363,137 @@ const ProfileScreen = ({ onNavigate }) => {
         visible={showPrivacySettings}
         onClose={() => setShowPrivacySettings(false)}
         title="Gizlilik Ayarları"
-        contentStyle={{ padding: 0 }}
+        contentStyle={{ padding: 0, maxHeight: '80%' }}
       >
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          paddingTop: theme.spacing.md 
-        }}>
-          <Text
-            style={{
-              fontFamily: theme.typography.fontFamily.sans,
-              fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
-              color: theme.colors.gray600,
-              textAlign: 'center',
-              marginBottom: theme.spacing.lg,
-            }}
-          >
-            Gizlilik tercihlerinizi ayarlayın
-          </Text>
-        </View>
-        
-        <View style={{ 
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
-          gap: width < 375 ? theme.spacing.sm : theme.spacing.md 
-        }}>
-          <View style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: theme.borderRadius.lg,
-            padding: theme.spacing.lg,
-            borderWidth: 1,
-            borderColor: theme.colors.gray200,
-            ...theme.shadows.sm,
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: theme.spacing.lg }}
+          style={{ maxHeight: '100%' }}
+        >
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl, 
+            paddingTop: theme.spacing.md 
           }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.md }}>
-              <View
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 20,
-                  backgroundColor: theme.colors.tealLight,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: theme.spacing.md,
-                }}
-              >
-                <Ionicons name="eye-outline" size={20} color={theme.colors.teal} />
-              </View>
-              <Text
-                style={{
-                  fontFamily: theme.typography.fontFamily.sans,
-                  fontSize: theme.typography.fontSize.base,
-                  fontWeight: theme.typography.fontWeight.semibold,
-                  color: theme.colors.navy,
-                }}
-              >
-                Profil Görünürlüğü
-              </Text>
-            </View>
-            
-            <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
-              {['public', 'private'].map((visibility) => (
-                <TouchableOpacity
-                  key={visibility}
-                  onPress={() => setPrivacySettings(prev => ({ ...prev, profileVisibility: visibility }))}
-                  style={{
-                    flex: 1,
-                    paddingVertical: theme.spacing.md,
-                    paddingHorizontal: theme.spacing.lg,
-                    borderRadius: theme.borderRadius.lg,
-                    borderWidth: 2,
-                    borderColor: privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray200,
-                    backgroundColor: privacySettings.profileVisibility === visibility ? theme.colors.burgundyLight : theme.colors.gray50,
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Ionicons 
-                    name={visibility === 'public' ? 'globe-outline' : 'lock-closed-outline'} 
-                    size={16} 
-                    color={privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray500}
-                    style={{ marginRight: theme.spacing.xs }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: theme.typography.fontFamily.sans,
-                      fontSize: theme.typography.fontSize.sm,
-                      fontWeight: theme.typography.fontWeight.semibold,
-                      color: privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray600,
-                    }}
-                  >
-                    {visibility === 'public' ? 'Herkese Açık' : 'Özel'}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          
-          {Object.entries(privacySettings).filter(([key]) => key !== 'profileVisibility').map(([key, value]) => (
-            <View
-              key={key}
+            <Text
               style={{
-                backgroundColor: theme.colors.white,
-                borderRadius: theme.borderRadius.lg,
-                padding: theme.spacing.lg,
-                borderWidth: 1,
-                borderColor: value ? theme.colors.burgundy : theme.colors.gray200,
-                ...theme.shadows.sm,
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: width < 375 ? theme.typography.fontSize.xs : theme.typography.fontSize.sm,
+                color: theme.colors.gray600,
+                textAlign: 'center',
+                marginBottom: theme.spacing.lg,
               }}
             >
-              <TouchableOpacity
-                onPress={() => handlePrivacyToggle(key)}
+              Gizlilik tercihlerinizi ayarlayın
+            </Text>
+          </View>
+          
+          <View style={{ 
+            paddingHorizontal: width < 375 ? theme.spacing.md : theme.spacing.lg, 
+            gap: width < 375 ? theme.spacing.xs : theme.spacing.sm 
+          }}>
+            <View style={{
+              backgroundColor: theme.colors.white,
+              borderRadius: theme.borderRadius.lg,
+              padding: width < 375 ? theme.spacing.md : theme.spacing.lg,
+              borderWidth: 1,
+              borderColor: theme.colors.gray200,
+              ...theme.shadows.sm,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm }}>
+                <View
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: theme.colors.tealLight,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: theme.spacing.sm,
+                  }}
+                >
+                  <Ionicons name="eye-outline" size={18} color={theme.colors.teal} />
+                </View>
+                <Text
+                  style={{
+                    fontFamily: theme.typography.fontFamily.sans,
+                    fontSize: theme.typography.fontSize.base,
+                    fontWeight: theme.typography.fontWeight.semibold,
+                    color: theme.colors.navy,
+                  }}
+                >
+                  Profil Görünürlüğü
+                </Text>
+              </View>
+              
+              <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+                {['public', 'private'].map((visibility) => (
+                  <TouchableOpacity
+                    key={visibility}
+                    onPress={() => setPrivacySettings(prev => ({ ...prev, profileVisibility: visibility }))}
+                    style={{
+                      flex: 1,
+                      paddingVertical: theme.spacing.md,
+                      paddingHorizontal: theme.spacing.lg,
+                      borderRadius: theme.borderRadius.lg,
+                      borderWidth: 2,
+                      borderColor: privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray200,
+                      backgroundColor: privacySettings.profileVisibility === visibility ? theme.colors.burgundyLight : theme.colors.gray50,
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Ionicons 
+                      name={visibility === 'public' ? 'globe-outline' : 'lock-closed-outline'} 
+                      size={16} 
+                      color={privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray500}
+                      style={{ marginRight: theme.spacing.xs }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: theme.typography.fontFamily.sans,
+                        fontSize: theme.typography.fontSize.sm,
+                        fontWeight: theme.typography.fontWeight.semibold,
+                        color: privacySettings.profileVisibility === visibility ? theme.colors.burgundy : theme.colors.gray600,
+                      }}
+                    >
+                      {visibility === 'public' ? 'Herkese Açık' : 'Özel'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+            
+            {Object.entries(privacySettings).filter(([key]) => key !== 'profileVisibility').map(([key, value]) => (
+              <View
+                key={key}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  backgroundColor: theme.colors.white,
+                  borderRadius: theme.borderRadius.lg,
+                  padding: width < 375 ? theme.spacing.md : theme.spacing.lg,
+                  borderWidth: 1,
+                  borderColor: value ? theme.colors.burgundy : theme.colors.gray200,
+                  ...theme.shadows.sm,
                 }}
               >
-                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity
+                  onPress={() => handlePrivacyToggle(key)}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                   <View
                     style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 20,
+                      width: 36,
+                      height: 36,
+                      borderRadius: 18,
                       backgroundColor: value ? theme.colors.burgundy : theme.colors.gray100,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginRight: theme.spacing.md,
+                      marginRight: theme.spacing.sm,
                     }}
                   >
                     <Ionicons 
@@ -1481,88 +1502,89 @@ const ProfileScreen = ({ onNavigate }) => {
                         key === 'allowMessages' ? 'chatbubble-outline' :
                         'analytics-outline'
                       } 
-                      size={20} 
+                      size={18} 
                       color={value ? theme.colors.white : theme.colors.gray500} 
                     />
                   </View>
-                  
-                  <View style={{ flex: 1 }}>
-                    <Text
-                      style={{
-                        fontFamily: theme.typography.fontFamily.sans,
-                        fontSize: theme.typography.fontSize.base,
-                        fontWeight: theme.typography.fontWeight.semibold,
-                        color: value ? theme.colors.burgundy : theme.colors.navy,
-                        marginBottom: theme.spacing.xs,
-                      }}
-                    >
-                      {key === 'showEmail' && 'E-posta Göster'}
-                      {key === 'allowMessages' && 'Mesajlara İzin Ver'}
-                      {key === 'dataSharing' && 'Veri Paylaşımı'}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: theme.typography.fontFamily.sans,
-                        fontSize: theme.typography.fontSize.sm,
-                        color: theme.colors.gray600,
-                        lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
-                      }}
-                    >
-                      {key === 'showEmail' && 'Profilinizde e-posta adresinizi göster'}
-                      {key === 'allowMessages' && 'Diğer kullanıcılar size mesaj gönderebilir'}
-                      {key === 'dataSharing' && 'Anonim veri paylaşımına izin ver'}
-                    </Text>
+                    
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: theme.typography.fontFamily.sans,
+                          fontSize: theme.typography.fontSize.base,
+                          fontWeight: theme.typography.fontWeight.semibold,
+                          color: value ? theme.colors.burgundy : theme.colors.navy,
+                          marginBottom: theme.spacing.xs,
+                        }}
+                      >
+                        {key === 'showEmail' && 'E-posta Göster'}
+                        {key === 'allowMessages' && 'Mesajlara İzin Ver'}
+                        {key === 'dataSharing' && 'Veri Paylaşımı'}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: theme.typography.fontFamily.sans,
+                          fontSize: theme.typography.fontSize.sm,
+                          color: theme.colors.gray600,
+                          lineHeight: theme.typography.lineHeight.relaxed * theme.typography.fontSize.sm,
+                        }}
+                      >
+                        {key === 'showEmail' && 'Profilinizde e-posta adresinizi göster'}
+                        {key === 'allowMessages' && 'Diğer kullanıcılar size mesaj gönderebilir'}
+                        {key === 'dataSharing' && 'Anonim veri paylaşımına izin ver'}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-                
-                <View
-                  style={{
-                    width: 52,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: value ? theme.colors.burgundy : theme.colors.gray300,
-                    justifyContent: 'center',
-                    alignItems: value ? 'flex-end' : 'flex-start',
-                    paddingHorizontal: 3,
-                    marginLeft: theme.spacing.md,
-                  }}
-                >
+                  
                   <View
                     style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 13,
-                      backgroundColor: theme.colors.white,
-                      ...theme.shadows.md,
+                      width: 52,
+                      height: 32,
+                      borderRadius: 16,
+                      backgroundColor: value ? theme.colors.burgundy : theme.colors.gray300,
+                      justifyContent: 'center',
+                      alignItems: value ? 'flex-end' : 'flex-start',
+                      paddingHorizontal: 3,
+                      marginLeft: theme.spacing.md,
                     }}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-        
-        <View style={{ 
-          flexDirection: 'row', 
-          gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
-          marginTop: theme.spacing.lg,
-          paddingHorizontal: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-          paddingBottom: width < 375 ? theme.spacing.lg : theme.spacing.xl,
-        }}>
-          <Button
-            title="İptal"
-            variant="outline"
-            onPress={() => setShowPrivacySettings(false)}
-            style={{ flex: 1 }}
-          />
-          <Button
-            title="Kaydet"
-            onPress={handlePrivacySave}
-            style={{ flex: 1 }}
-            icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
-            iconPosition="right"
-          />
-        </View>
+                  >
+                    <View
+                      style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: 13,
+                        backgroundColor: theme.colors.white,
+                        ...theme.shadows.md,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+          
+          <View style={{ 
+            flexDirection: 'row', 
+            gap: width < 375 ? theme.spacing.xs : theme.spacing.sm, 
+            marginTop: theme.spacing.md,
+            paddingHorizontal: width < 375 ? theme.spacing.md : theme.spacing.lg,
+            paddingBottom: width < 375 ? theme.spacing.md : theme.spacing.lg,
+          }}>
+            <Button
+              title="İptal"
+              variant="outline"
+              onPress={() => setShowPrivacySettings(false)}
+              style={{ flex: 1 }}
+            />
+            <Button
+              title="Kaydet"
+              onPress={handlePrivacySave}
+              style={{ flex: 1 }}
+              icon={<Ionicons name="checkmark" size={width < 375 ? 16 : 18} color={theme.colors.white} />}
+              iconPosition="right"
+            />
+          </View>
+        </ScrollView>
       </Modal>
     </View>
   );
