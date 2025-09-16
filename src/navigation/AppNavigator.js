@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '@clerk/clerk-expo';
@@ -12,6 +13,10 @@ import UserProfileScreen from '../screens/UserProfileScreen';
 import UploadScreen from '../screens/UploadScreen';
 import SelectionScreen from '../screens/SelectionScreen';
 import ResultScreen from '../screens/ResultScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+
+// Components
+import { Navbar } from '../components/ui';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +66,10 @@ const AppNavigator = () => {
     setCurrentScreen('Upload');
   };
 
+  const handleNavigate = (screen) => {
+    setCurrentScreen(screen);
+  };
+
   const renderScreen = () => {
     // Clerk yüklenene kadar splash screen göster
     if (!isLoaded) {
@@ -87,14 +96,28 @@ const AppNavigator = () => {
         return <SelectionScreen onFigureSelected={handleFigureSelected} />;
       case 'Result':
         return <ResultScreen onNewPhoto={handleNewPhoto} />;
+      case 'Profile':
+        return <ProfileScreen onNavigate={handleNavigate} />;
       default:
         return <SplashScreen onFinish={handleSplashFinish} />;
     }
   };
 
+  // Navbar'ın gösterileceği sayfalar
+  const showNavbar = ['Upload', 'Profile'].includes(currentScreen);
+
   return (
     <NavigationContainer>
-      {renderScreen()}
+      <View style={{ flex: 1 }}>
+        {renderScreen()}
+        {showNavbar && (
+          <Navbar
+            currentScreen={currentScreen}
+            onNavigate={handleNavigate}
+            user={null} // Clerk user bilgisi buraya geçilebilir
+          />
+        )}
+      </View>
     </NavigationContainer>
   );
 };

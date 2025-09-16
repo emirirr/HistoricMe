@@ -6,3 +6,4 @@ export { default as UserProfileScreen } from './UserProfileScreen';
 export { default as UploadScreen } from './UploadScreen';
 export { default as SelectionScreen } from './SelectionScreen';
 export { default as ResultScreen } from './ResultScreen';
+export { default as ProfileScreen } from './ProfileScreen';
