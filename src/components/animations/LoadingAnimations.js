@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../styles/theme';
+import { completeLightTheme as theme } from '../../styles/theme';
 import LottieAnimation from './LottieAnimation';
 
 const { width, height } = Dimensions.get('window');

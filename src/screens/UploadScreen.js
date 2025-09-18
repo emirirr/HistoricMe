@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Card, LoadingSpinner } from '../components/ui';
 import { BannerAd } from '../components/ads';
-import { theme } from '../styles/theme';
+import { completeLightTheme as theme } from '../styles/theme';
 
 const { width, height } = Dimensions.get('window');
 

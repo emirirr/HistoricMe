@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Card, Button } from '../components/ui';
 import { BannerAd } from '../components/ads';
-import { theme } from '../styles/theme';
+import { completeLightTheme as theme } from '../styles/theme';
 import apiService from '../services/api';
 
 const { width } = Dimensions.get('window');

@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Alert, Dimensions } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Card } from '../components/ui';
-import { theme } from '../styles/theme';
+import { completeLightTheme as theme } from '../styles/theme';
 
 const { width } = Dimensions.get('window');
 

@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSignUp } from '@clerk/clerk-expo';
 import { Button, Input } from '../components/ui';
-import { theme } from '../styles/theme';
+import { completeLightTheme as theme } from '../styles/theme';
 
 const { width } = Dimensions.get('window');
 

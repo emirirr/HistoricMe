@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
-import { theme } from '../../styles/theme';
+import { completeLightTheme as theme } from '../../styles/theme';
 
 const LoadingSpinner = ({
   size = 'large',

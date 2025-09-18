@@ -1,6 +1,6 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../styles/theme';
+import { completeLightTheme as theme } from '../../styles/theme';
 
 const Icon = ({
   name,

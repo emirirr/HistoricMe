@@ -14,9 +14,19 @@ export default {
     assetBundlePatterns: [
       "**/*"
     ],
+    web: {
+      bundler: "metro"
+    },
+    plugins: [
+      "expo-font",
+      "expo-camera",
+      "expo-image-picker"
+    ],
+    newArchEnabled: true,
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "com.historicme.app"
+      bundleIdentifier: "com.historicme.app",
+      newArchEnabled: true
     },
     android: {
       icon: "./assets/ico.png",
@@ -24,16 +34,9 @@ export default {
         foregroundImage: "./assets/ico.png",
         backgroundColor: "#386160"
       },
-      package: "com.historicme.app"
+      package: "com.historicme.app",
+      newArchEnabled: true
     },
-    web: {
-      bundler: "metro"
-    },
-    plugins: [
-      "expo-camera",
-      "expo-image-picker"
-    ],
-    
     extra: {
       clerkPublishableKey: "pk_test_dmFsdWVkLXJlZGZpc2gtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA"
     },

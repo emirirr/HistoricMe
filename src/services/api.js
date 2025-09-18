@@ -1,6 +1,6 @@
 // API servis dosyası - HistoricMe backend entegrasyonu için
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.historicme.com';
+const API_BASE_URL = 'https://api.historicme.com';
 
 class ApiService {
   constructor() {

@@ -6,7 +6,7 @@ import { ClerkProvider } from '@clerk/clerk-expo';
 import Constants from 'expo-constants';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ThemeProvider } from './src/contexts/ThemeContext';
-import { theme } from './src/styles/theme';
+import { completeLightTheme as theme } from './src/styles/theme';
 import HapticService from './src/services/HapticService';
 import SoundService from './src/services/SoundService';
 import GamificationService from './src/services/GamificationService';

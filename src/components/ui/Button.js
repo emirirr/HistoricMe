@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../../styles/theme';
+import { completeLightTheme as theme } from '../../styles/theme';
 
 const Button = ({
   title,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../../styles/theme';
+import { completeLightTheme as theme } from '../../styles/theme';
 
 const { width } = Dimensions.get('window');
 
