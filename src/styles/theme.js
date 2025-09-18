@@ -1,4 +1,5 @@
-export const theme = {
+// Light Theme
+export const lightTheme = {
   colors: {
     // Primary Brand Colors
     cream: '#F0D9B6',      // Ana açık renk
@@ -32,8 +33,68 @@ export const theme = {
     gray700: '#374151',
     gray800: '#1F2937',
     gray900: '#111827',
+    
+    // Background colors
+    background: '#F0D9B6',
+    surface: '#FFFFFF',
+    surfaceVariant: '#F5F0E6',
+    onBackground: '#1F2937',
+    onSurface: '#374151',
+    onSurfaceVariant: '#6B7280',
   },
-  
+};
+
+// Dark Theme
+export const darkTheme = {
+  colors: {
+    // Primary Brand Colors (adjusted for dark mode)
+    cream: '#2A2A2A',      // Dark background
+    teal: '#4A7A79',       // Lighter teal for dark mode
+    burgundy: '#8A3028',   // Lighter burgundy for dark mode
+    black: '#FFFFFF',      // Inverted
+    white: '#000000',      // Inverted
+    
+    // Extended palette (dark mode)
+    creamLight: '#1F1F1F',  
+    creamDark: '#333333',
+    tealLight: '#5A8A89',
+    tealDark: '#3A5A59',
+    burgundyLight: '#9A4038',
+    burgundyDark: '#6A2028',
+    
+    // Semantic colors (adjusted for dark mode)
+    success: '#34D399',
+    warning: '#FBBF24',
+    error: '#F87171',
+    info: '#60A5FA',
+    
+    // Neutral colors (dark mode)
+    gray50: '#1F2937',
+    gray100: '#374151',
+    gray200: '#4B5563',
+    gray300: '#6B7280',
+    gray400: '#9CA3AF',
+    gray500: '#D1D5DB',
+    gray600: '#E5E7EB',
+    gray700: '#F3F4F6',
+    gray800: '#F9FAFB',
+    gray900: '#FFFFFF',
+    
+    // Background colors (dark mode)
+    background: '#1A1A1A',
+    surface: '#2A2A2A',
+    surfaceVariant: '#333333',
+    onBackground: '#F3F4F6',
+    onSurface: '#E5E7EB',
+    onSurfaceVariant: '#9CA3AF',
+  },
+};
+
+// Default theme (light)
+export const theme = lightTheme;
+
+// Theme structure for both light and dark
+const themeStructure = {
   typography: {
     fontFamily: {
       serif: 'System',
@@ -128,4 +189,15 @@ export const theme = {
   },
 };
 
-export default theme;
+// Merge theme structure with colors
+export const createTheme = (colorTheme) => ({
+  ...themeStructure,
+  colors: colorTheme.colors,
+});
+
+// Create complete themes
+export const completeLightTheme = createTheme(lightTheme);
+export const completeDarkTheme = createTheme(darkTheme);
+
+// Default export
+export default completeLightTheme;

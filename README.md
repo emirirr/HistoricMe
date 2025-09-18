@@ -4,13 +4,25 @@ HistoricMe, kullanıcıların fotoğraflarını tarihin büyük figürleriyle ya
 
 ## 🎯 Uygulama Özellikleri
 
-### MVP Özellikleri
+### 🚀 Temel Özellikler
 1. **Splash Screen + Onboarding** - Uygulama tanıtımı ve kullanıcı rehberi
 2. **Giriş Sistemi** - Google/Apple ile veya misafir modu
 3. **Fotoğraf Yükleme** - Kamera veya galeri, yüz algılama
 4. **Tarih Figürü Seçimi** - Liderler, bilim insanları, sanatçılar, krallar/kraliçeler
 5. **AI Görsel Üretimi** - 3 farklı stil: fotoğraf stüdyosu, tablo, gerçekçi sahne
 6. **Sonuç Ekranı** - Ön izleme, paylaş, indir, HistoricMe filigranı
+
+### ✨ Gelişmiş Özellikler
+7. **Dark Mode** - Gece/gündüz teması desteği
+8. **Haptic Feedback** - Dokunsal geri bildirim sistemi
+9. **Sound Effects** - Başarı, hata ve etkileşim sesleri
+10. **Friend System** - Arkadaş ekleme, takip etme sistemi
+11. **Comment System** - Görsellere yorum yapma ve beğenme
+12. **Advanced AI** - Stil transferi, renk paletleri, gelişmiş filtreler
+13. **Gamification** - Seviye sistemi, rozetler, günlük görevler
+14. **Animations** - Lottie animasyonları ve mikro-etkileşimler
+15. **Analytics** - Kullanıcı analitikleri ve performans metrikleri
+16. **Accessibility** - Erişilebilirlik özellikleri ve destek
 
 ## 🎨 Tasarım Sistemi
 
@@ -34,16 +46,33 @@ HistoricMe, kullanıcıların fotoğraflarını tarihin büyük figürleriyle ya
 
 ## 🛠 Teknoloji Stack
 
+### Core Technologies
 - **React Native** - Mobil uygulama framework'ü
 - **Expo** - Geliştirme ve build platformu
 - **NativeWind** - TailwindCSS benzeri styling
 - **React Navigation** - Sayfa geçişleri
+
+### Media & Camera
 - **Expo Image Picker** - Fotoğraf seçimi
 - **Expo Camera** - Kamera erişimi
 - **Expo Face Detector** - Yüz algılama
+- **Expo Media Library** - Medya kütüphanesi
+
+### UI & Effects
 - **Expo Linear Gradient** - Gradient efektleri
 - **Expo Blur** - Bulanıklık efektleri
+- **Lottie React Native** - Animasyonlar
+- **React Native Reanimated** - Gelişmiş animasyonlar
+
+### User Experience
 - **Expo Haptics** - Dokunsal geri bildirim
+- **Expo AV** - Ses efektleri
+- **AsyncStorage** - Yerel veri saklama
+
+### Authentication & Analytics
+- **Clerk** - Kimlik doğrulama
+- **Custom Analytics** - Kullanıcı analitikleri
+- **Accessibility Services** - Erişilebilirlik desteği
 
 ## 📱 Ekran Yapısı
 
@@ -98,25 +127,52 @@ npx expo start --android
 ```
 src/
 ├── components/
-│   └── ui/                 # UI bileşenleri
-│       ├── Button.js
-│       ├── Input.js
-│       ├── Card.js
-│       ├── Modal.js
-│       ├── LoadingSpinner.js
-│       ├── Icon.js
+│   ├── ui/                 # UI bileşenleri
+│   │   ├── Button.js
+│   │   ├── Input.js
+│   │   ├── Card.js
+│   │   ├── Modal.js
+│   │   ├── LoadingSpinner.js
+│   │   ├── Icon.js
+│   │   └── index.js
+│   ├── animations/         # Animasyon bileşenleri
+│   │   ├── LottieAnimation.js
+│   │   ├── LoadingAnimations.js
+│   │   └── index.js
+│   └── ads/               # Reklam bileşenleri
+│       ├── BannerAd.js
+│       ├── InterstitialAd.js
+│       ├── RewardedAd.js
 │       └── index.js
 ├── screens/                # Uygulama ekranları
 │   ├── SplashScreen.js
-│   ├── OnboardingScreen.js
 │   ├── LoginScreen.js
+│   ├── SignUpScreen.js
+│   ├── VerificationScreen.js
+│   ├── UserProfileScreen.js
 │   ├── UploadScreen.js
 │   ├── SelectionScreen.js
 │   ├── ResultScreen.js
+│   ├── ProfileScreen.js
+│   ├── DiscoverScreen.js
+│   ├── PaymentScreen.js
+│   ├── SubscriptionScreen.js
 │   └── index.js
 ├── navigation/             # Navigasyon
 │   └── AppNavigator.js
-└── styles/                 # Stil dosyaları
+├── services/              # Servisler
+│   ├── HapticService.js
+│   ├── SoundService.js
+│   ├── GamificationService.js
+│   ├── FriendService.js
+│   ├── CommentService.js
+│   ├── AIService.js
+│   ├── AnalyticsService.js
+│   ├── AccessibilityService.js
+│   └── index.js
+├── contexts/              # React Context'ler
+│   └── ThemeContext.js
+└── styles/                # Stil dosyaları
     └── theme.js
 ```
 
@@ -140,15 +196,38 @@ src/
 - Michelangelo (Heykeltıraş & Ressam)
 - Pablo Picasso (Kübist Sanatçı)
 
+## 🎮 Gamification Sistemi
+
+### Seviye Sistemi
+- **XP Kazanma**: Fotoğraf oluşturma, paylaşım, yorum yapma
+- **Seviye Atlama**: Her seviyede yeni özellikler ve rozetler
+- **Günlük Görevler**: Her gün yeni görevler ve ödüller
+
+### Rozetler
+- **İlk Adımlar**: İlk fotoğraf oluşturma
+- **Sosyal Kelebek**: 10 fotoğraf paylaşma
+- **Sanatçı**: 50 fotoğraf oluşturma
+- **Tarihçi**: Tüm dönemleri deneme
+- **Seri Ustası**: 7 gün üst üste giriş
+
 ## 🔮 Gelecek Özellikler
 
-- [ ] Daha fazla tarihi figür
+- [x] Dark Mode desteği
+- [x] Haptic Feedback sistemi
+- [x] Sound Effects
+- [x] Friend System
+- [x] Comment System
+- [x] Advanced AI Features
+- [x] Gamification
+- [x] Animations
+- [x] Analytics
+- [x] Accessibility
 - [ ] Video formatında sonuçlar
-- [ ] Sosyal medya entegrasyonu
-- [ ] Kullanıcı profilleri
-- [ ] Premium abonelik sistemi
-- [ ] Topluluk galerisi
 - [ ] AR (Artırılmış Gerçeklik) özellikleri
+- [ ] AI Chatbot asistanı
+- [ ] Çoklu dil desteği
+- [ ] Offline mod
+- [ ] Cloud sync
 
 ## 📄 Lisans
 

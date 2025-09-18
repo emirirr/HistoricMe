@@ -10,7 +10,6 @@ const { width } = Dimensions.get('window');
 const PaymentScreen = ({ 
   onPaymentSuccess, 
   onBack, 
-  selectedPlan = null,
   isSubscription = false 
 }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('credit');
@@ -19,6 +18,7 @@ const PaymentScreen = ({
   const [cvv, setCvv] = useState('');
   const [cardName, setCardName] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   // Ödeme yöntemleri
   const paymentMethods = [
@@ -454,7 +454,7 @@ const PaymentScreen = ({
 
         {/* Ödeme Butonu */}
         <Button
-          title={isProcessing ? "İşleniyor..." : `₺${selectedPlan?.price || '0'} Öde`}
+          title={isProcessing ? "İşleniyor..." : selectedPlan ? `₺${selectedPlan.price} Öde` : "Paket Seçin"}
           variant="primary"
           size="lg"
           onPress={handlePayment}

@@ -356,7 +356,7 @@ const SubscriptionScreen = ({
 
         {/* Abonelik Butonu */}
         <Button
-          title={isProcessing ? "İşleniyor..." : `₺${selectedPlan?.price || '0'} Abone Ol`}
+          title={isProcessing ? "İşleniyor..." : selectedPlan ? `₺${selectedPlan.price} Abone Ol` : "Plan Seçin"}
           variant="primary"
           size="lg"
           onPress={handleSubscription}
