@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import { Button, Card, LoadingSpinner } from '../components/ui';
+import { RewardedAd } from '../components/ads';
 import { theme } from '../styles/theme';
 
 const { width, height } = Dimensions.get('window');
@@ -14,6 +15,7 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
   const [generatedImages, setGeneratedImages] = useState([]);
   const [selectedStyle, setSelectedStyle] = useState(null);
   const [finalImage, setFinalImage] = useState(null);
+  const [showRewardedAd, setShowRewardedAd] = useState(false);
 
   const styles = [
     {
@@ -95,6 +97,28 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
     }
   };
 
+  const handleShowRewardedAd = () => {
+    setShowRewardedAd(true);
+  };
+
+  const handleRewardedAdClose = () => {
+    setShowRewardedAd(false);
+  };
+
+  const handleRewardEarned = () => {
+    // Ödül kazanıldı - premium özellikler açılabilir
+    Alert.alert(
+      'Tebrikler!',
+      'Reklam izleyerek premium özelliklerin kilidini açtınız!',
+      [{ text: 'Tamam' }]
+    );
+  };
+
+  const handleWatchAd = () => {
+    // Gerçek reklam servisi burada çağrılacak
+    console.log('Rewarded ad started');
+  };
+
   const renderProcessingScreen = () => (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <LoadingSpinner
@@ -120,7 +144,7 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
             marginBottom: theme.spacing.sm,
           }}
         >
-          {selectedFigure.name} ile hazırlanıyor
+          {selectedFigure?.name || 'Tarihi Figür'} ile hazırlanıyor
         </Text>
         <Text
           style={{
@@ -284,7 +308,7 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
             textAlign: 'center',
           }}
         >
-          {selectedFigure.name} ile {selectedStyle?.name.toLowerCase()} stili
+          {selectedFigure?.name || 'Tarihi Figür'} ile {selectedStyle?.name?.toLowerCase() || 'özel'} stili
         </Text>
       </View>
 
@@ -382,6 +406,25 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
           iconPosition="left"
           style={{ marginBottom: theme.spacing.md }}
         />
+
+        <Button
+          title="Premium Özellikler Aç"
+          variant="outline"
+          size="lg"
+          onPress={handleShowRewardedAd}
+          icon={
+            <Ionicons
+              name="star"
+              size={24}
+              color={theme.colors.gold}
+            />
+          }
+          iconPosition="left"
+          style={{ 
+            marginBottom: theme.spacing.md,
+            borderColor: theme.colors.gold,
+          }}
+        />
         
         <Button
           title="Yeni Fotoğraf"
@@ -469,6 +512,16 @@ const ResultScreen = ({ userPhoto, selectedFigure, onNewPhoto }) => {
       ) : (
         renderStyleSelection()
       )}
+
+      {/* Rewarded Ad */}
+      <RewardedAd
+        visible={showRewardedAd}
+        onClose={handleRewardedAdClose}
+        onRewardEarned={handleRewardEarned}
+        rewardType="premium"
+        rewardAmount={1}
+        onWatchAd={handleWatchAd}
+      />
     </View>
   );
 };

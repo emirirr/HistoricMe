@@ -6,7 +6,6 @@ import { useAuth } from '@clerk/clerk-expo';
 
 // Screens
 import SplashScreen from '../screens/SplashScreen';
-import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import VerificationScreen from '../screens/VerificationScreen';
@@ -16,9 +15,12 @@ import SelectionScreen from '../screens/SelectionScreen';
 import ResultScreen from '../screens/ResultScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import DiscoverScreen from '../screens/DiscoverScreen';
+import PaymentScreen from '../screens/PaymentScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
 
 // Components
 import { Navbar } from '../components/ui';
+import { InterstitialAd } from '../components/ads';
 
 const Stack = createStackNavigator();
 
@@ -26,13 +28,12 @@ const AppNavigator = () => {
   const [currentScreen, setCurrentScreen] = useState('Splash');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpData, setSignUpData] = useState(null);
+  const [showInterstitialAd, setShowInterstitialAd] = useState(false);
+  const [userCredits, setUserCredits] = useState(0);
+  const [userSubscription, setUserSubscription] = useState(null);
   const { isSignedIn, isLoaded } = useAuth();
 
   const handleSplashFinish = () => {
-    setCurrentScreen('Onboarding');
-  };
-
-  const handleOnboardingComplete = () => {
     setCurrentScreen('Login');
   };
 
@@ -96,10 +97,50 @@ const AppNavigator = () => {
     setCurrentScreen('Login');
   };
 
+  const handleShowInterstitialAd = () => {
+    setShowInterstitialAd(true);
+  };
+
+  const handleInterstitialAdClose = () => {
+    setShowInterstitialAd(false);
+  };
+
+  const handleInterstitialAdComplete = () => {
+    setShowInterstitialAd(false);
+    // Reklam tamamlandıktan sonra yapılacak işlemler
+  };
+
+  const handleShowPayment = (plan) => {
+    setCurrentScreen('Payment');
+  };
+
+  const handlePaymentSuccess = (plan) => {
+    // Kredi ekleme veya abonelik aktif etme
+    if (plan.isSubscription) {
+      setUserSubscription(plan);
+    } else {
+      setUserCredits(prev => prev + (plan.id === 'pack5' ? 5 : plan.id === 'pack10' ? 10 : 1));
+    }
+    setCurrentScreen('Upload');
+  };
+
+  const handleShowSubscription = () => {
+    setCurrentScreen('Subscription');
+  };
+
+  const handleSubscriptionSuccess = (plan) => {
+    setUserSubscription(plan);
+    setCurrentScreen('Upload');
+  };
+
+  const handleBackToUpload = () => {
+    setCurrentScreen('Upload');
+  };
+
   const renderScreen = () => {
-    // Clerk yüklenene kadar splash screen göster
+    // Clerk yüklenene kadar login screen göster
     if (!isLoaded) {
-      return <SplashScreen onFinish={handleSplashFinish} />;
+      return <LoginScreen onLoginSuccess={handleLoginSuccess} onGoToSignUp={handleGoToSignUp} />;
     }
 
     // Eğer kullanıcı giriş yapmışsa ana uygulamaya yönlendir
@@ -108,8 +149,8 @@ const AppNavigator = () => {
     }
 
     switch (currentScreen) {
-      case 'Onboarding':
-        return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+      case 'Splash':
+        return <SplashScreen onFinish={handleSplashFinish} />;
       case 'Login':
         return <LoginScreen onLoginSuccess={handleLoginSuccess} onGoToSignUp={handleGoToSignUp} />;
       case 'SignUp':
@@ -119,17 +160,32 @@ const AppNavigator = () => {
       case 'UserProfile':
         return <UserProfileScreen onProfileComplete={handleProfileComplete} />;
       case 'Upload':
-        return <UploadScreen onPhotoSelected={handlePhotoSelected} />;
+        return <UploadScreen 
+          onPhotoSelected={handlePhotoSelected} 
+          userCredits={userCredits}
+          userSubscription={userSubscription}
+          onShowPayment={handleShowPayment}
+          onShowSubscription={handleShowSubscription}
+        />;
       case 'Selection':
         return <SelectionScreen onFigureSelected={handleFigureSelected} />;
       case 'Result':
         return <ResultScreen onNewPhoto={handleNewPhoto} />;
       case 'Profile':
-        return <ProfileScreen onNavigate={handleNavigate} onLogout={handleLogout} />;
+        return <ProfileScreen 
+          onNavigate={handleNavigate} 
+          onLogout={handleLogout}
+          onShowPayment={handleShowPayment}
+          onShowSubscription={handleShowSubscription}
+        />;
       case 'Discover':
         return <DiscoverScreen onNavigate={handleNavigate} />;
+      case 'Payment':
+        return <PaymentScreen onPaymentSuccess={handlePaymentSuccess} onBack={handleBackToUpload} />;
+      case 'Subscription':
+        return <SubscriptionScreen onSubscriptionSuccess={handleSubscriptionSuccess} onBack={handleBackToUpload} currentSubscription={userSubscription} />;
       default:
-        return <SplashScreen onFinish={handleSplashFinish} />;
+        return <LoginScreen onLoginSuccess={handleLoginSuccess} onGoToSignUp={handleGoToSignUp} />;
     }
   };
 
@@ -147,6 +203,16 @@ const AppNavigator = () => {
             user={null} // Clerk user bilgisi buraya geçilebilir
           />
         )}
+        
+        {/* Interstitial Ad */}
+        <InterstitialAd
+          visible={showInterstitialAd}
+          onClose={handleInterstitialAdClose}
+          onAdComplete={handleInterstitialAdComplete}
+          duration={5000}
+          showSkipButton={true}
+          skipAfter={3000}
+        />
       </View>
     </NavigationContainer>
   );

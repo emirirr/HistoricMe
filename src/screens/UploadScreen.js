@@ -4,11 +4,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Card, LoadingSpinner } from '../components/ui';
+import { BannerAd } from '../components/ads';
 import { theme } from '../styles/theme';
 
 const { width, height } = Dimensions.get('window');
 
-const UploadScreen = ({ onPhotoSelected }) => {
+const UploadScreen = ({ onPhotoSelected, userCredits = 0, userSubscription = null, onShowPayment, onShowSubscription }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [faceDetected, setFaceDetected] = useState(false);
@@ -28,6 +29,20 @@ const UploadScreen = ({ onPhotoSelected }) => {
   };
 
   const handleCameraPress = async () => {
+    // Kredi veya abonelik kontrolü
+    if (!userSubscription && userCredits <= 0) {
+      Alert.alert(
+        'Kredi Gerekli',
+        'AI fotoğraf oluşturmak için kredi satın almanız veya abone olmanız gerekiyor.',
+        [
+          { text: 'İptal', style: 'cancel' },
+          { text: 'Kredi Satın Al', onPress: () => onShowPayment() },
+          { text: 'Abone Ol', onPress: () => onShowSubscription() }
+        ]
+      );
+      return;
+    }
+
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(
@@ -51,6 +66,20 @@ const UploadScreen = ({ onPhotoSelected }) => {
   };
 
   const handleGalleryPress = async () => {
+    // Kredi veya abonelik kontrolü
+    if (!userSubscription && userCredits <= 0) {
+      Alert.alert(
+        'Kredi Gerekli',
+        'AI fotoğraf oluşturmak için kredi satın almanız veya abone olmanız gerekiyor.',
+        [
+          { text: 'İptal', style: 'cancel' },
+          { text: 'Kredi Satın Al', onPress: () => onShowPayment() },
+          { text: 'Abone Ol', onPress: () => onShowSubscription() }
+        ]
+      );
+      return;
+    }
+
     const hasPermission = await requestPermissions();
     if (!hasPermission) return;
 
@@ -123,6 +152,52 @@ const UploadScreen = ({ onPhotoSelected }) => {
 
       {/* Header */}
       <View style={{ alignItems: 'center', marginBottom: theme.spacing['3xl'] }}>
+        {/* Kredi Durumu */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: theme.colors.white,
+            paddingHorizontal: theme.spacing.lg,
+            paddingVertical: theme.spacing.sm,
+            borderRadius: theme.borderRadius.full,
+            marginBottom: theme.spacing.lg,
+            ...theme.shadows.sm,
+          }}
+        >
+          {userSubscription ? (
+            <>
+              <Ionicons name="star" size={20} color={theme.colors.gold} />
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.sm,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  color: theme.colors.navy,
+                  marginLeft: theme.spacing.sm,
+                }}
+              >
+                {userSubscription?.name || 'Premium'} Abone
+              </Text>
+            </>
+          ) : (
+            <>
+              <Ionicons name="diamond" size={20} color={theme.colors.teal} />
+              <Text
+                style={{
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.sm,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  color: theme.colors.navy,
+                  marginLeft: theme.spacing.sm,
+                }}
+              >
+                {userCredits} Kredi
+              </Text>
+            </>
+          )}
+        </View>
+
         <View
           style={{
             width: 100,
@@ -192,6 +267,52 @@ const UploadScreen = ({ onPhotoSelected }) => {
           }
           iconPosition="left"
         />
+
+        {/* Ödeme Butonları */}
+        <View style={{ 
+          flexDirection: 'row', 
+          justifyContent: 'space-between', 
+          marginTop: theme.spacing.lg,
+          gap: theme.spacing.sm 
+        }}>
+          <Button
+            title="Kredi Satın Al"
+            variant="outline"
+            size="md"
+            onPress={() => onShowPayment()}
+            icon={
+              <Ionicons
+                name="diamond"
+                size={20}
+                color={theme.colors.teal}
+              />
+            }
+            iconPosition="left"
+            style={{ 
+              flex: 1,
+              borderColor: theme.colors.teal,
+            }}
+          />
+          
+          <Button
+            title="Abone Ol"
+            variant="outline"
+            size="md"
+            onPress={() => onShowSubscription()}
+            icon={
+              <Ionicons
+                name="star"
+                size={20}
+                color={theme.colors.gold}
+              />
+            }
+            iconPosition="left"
+            style={{ 
+              flex: 1,
+              borderColor: theme.colors.gold,
+            }}
+          />
+        </View>
       </View>
 
       {/* Tips */}
@@ -227,6 +348,13 @@ const UploadScreen = ({ onPhotoSelected }) => {
           </Text>
         </View>
       </Card>
+
+      {/* Banner Ad */}
+      <BannerAd 
+        size="standard"
+        style={{ marginHorizontal: theme.spacing.xl }}
+        onPress={() => console.log('Banner ad clicked')}
+      />
     </ScrollView>
   );
 

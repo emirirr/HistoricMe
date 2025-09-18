@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions, Alert, Ref
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Card, Button } from '../components/ui';
+import { BannerAd } from '../components/ads';
 import { theme } from '../styles/theme';
 import apiService from '../services/api';
 
@@ -271,6 +272,12 @@ const DiscoverScreen = ({ onNavigate }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+        {/* Banner Ad */}
+        <BannerAd 
+          size="medium"
+          style={{ marginBottom: theme.spacing.lg }}
+          onPress={() => console.log('Discover banner ad clicked')}
+        />
         {isLoading ? (
           <View style={{ alignItems: 'center', paddingVertical: theme.spacing.xl }}>
             <View

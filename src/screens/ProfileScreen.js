@@ -9,7 +9,7 @@ import apiService from '../services/api';
 
 const { width } = Dimensions.get('window');
 
-const ProfileScreen = ({ onNavigate, onLogout }) => {
+const ProfileScreen = ({ onNavigate, onLogout, onShowPayment, onShowSubscription }) => {
   const { user } = useUser();
   const { signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
@@ -555,19 +555,106 @@ const ProfileScreen = ({ onNavigate, onLogout }) => {
         </View>
       </Card>
 
+      {/* Payment Options */}
+      <Card variant="default" style={{ marginBottom: theme.spacing.lg }}>
+        <Text
+          style={{
+            fontFamily: theme.typography.fontFamily.serif,
+            fontSize: theme.typography.fontSize.lg,
+            fontWeight: theme.typography.fontWeight.bold,
+            color: theme.colors.navy,
+            marginBottom: theme.spacing.md,
+          }}
+        >
+          Ödeme Seçenekleri
+        </Text>
+        
+        <View style={{ gap: theme.spacing.sm }}>
+          <TouchableOpacity
+            onPress={() => onShowPayment()}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: theme.spacing.md,
+              paddingHorizontal: theme.spacing.sm,
+              borderRadius: theme.borderRadius.lg,
+              backgroundColor: theme.colors.tealLight,
+              borderWidth: 1,
+              borderColor: theme.colors.teal,
+            }}
+          >
+            <Ionicons name="diamond" size={20} color={theme.colors.teal} />
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.base,
+                color: theme.colors.navy,
+                marginLeft: theme.spacing.md,
+                flex: 1,
+              }}
+            >
+              Kredi Satın Al
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.teal} />
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            onPress={() => onShowSubscription()}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: theme.spacing.md,
+              paddingHorizontal: theme.spacing.sm,
+              borderRadius: theme.borderRadius.lg,
+              backgroundColor: theme.colors.goldLight,
+              borderWidth: 1,
+              borderColor: theme.colors.gold,
+            }}
+          >
+            <Ionicons name="star" size={20} color={theme.colors.gold} />
+            <Text
+              style={{
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.base,
+                color: theme.colors.navy,
+                marginLeft: theme.spacing.md,
+                flex: 1,
+              }}
+            >
+              Abone Ol
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.gold} />
+          </TouchableOpacity>
+        </View>
+      </Card>
+
       {/* Sign Out Button */}
-      <Button
-        title="Çıkış Yap"
-        variant="outline"
+      <TouchableOpacity
         onPress={handleSignOut}
         style={{
-          borderColor: theme.colors.red,
-          borderWidth: 2,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: theme.spacing.md,
+          paddingHorizontal: theme.spacing.sm,
+          borderRadius: theme.borderRadius.lg,
+          backgroundColor: theme.colors.gray50,
           marginBottom: theme.spacing.xl,
         }}
-        textStyle={{ color: theme.colors.red }}
-        icon={<Ionicons name="log-out-outline" size={20} color={theme.colors.red} />}
-      />
+      >
+        <Ionicons name="log-out-outline" size={20} color={theme.colors.gray500} />
+        <Text
+          style={{
+            fontFamily: theme.typography.fontFamily.sans,
+            fontSize: theme.typography.fontSize.base,
+            color: theme.colors.navy,
+            marginLeft: theme.spacing.md,
+            flex: 1,
+          }}
+        >
+          Çıkış Yap
+        </Text>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.gray400} />
+      </TouchableOpacity>
     </ScrollView>
   );
 
