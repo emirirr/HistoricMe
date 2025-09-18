@@ -1,0 +1,11 @@
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:A2DA637B-989B-45CD-B6E2-4EECA24AAB95, OS:18.5, name:iPhone 16 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:A2DA637B-989B-45CD-B6E2-4EECA24AAB95, OS:18.5, name:iPhone 16 Pro }
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftEmitModule normal x86_64 Emitting\ module\ for\ HistoricMe (in target 'HistoricMe' from project 'HistoricMe')
+	EmitSwiftModule normal x86_64 (in target 'HistoricMe' from project 'HistoricMe')
+	Building workspace HistoricMe with scheme HistoricMe and configuration Debug
+(3 failures)
